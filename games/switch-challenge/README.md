@@ -1,30 +1,65 @@
-Switch Challenge Trainer
-Overview
-Switch Challenge is a browser-based symbol sequencing puzzle designed to simulate cognitive flexibility assessments used in hiring processes. The player must transform an initial sequence into a target sequence by applying one valid operator per step. Difficulty increases progressively as performance improves.
-Core Functionality
-The game generates dynamic puzzles consisting of a source sequence, a target sequence, and a set of operator rules. Each move requires selecting the correct operator to transform the sequence closer to the target state. Accuracy and speed determine progression.
-Features
-Dynamic puzzle generation with operator-based transformations
-Timer-driven gameplay with scoring and progression tracking
-Integrated rule display and contextual hints
-Structured UI for clear interaction and feedback
-Responsive layout optimized for desktop environments
-Project Structure
-The application is organized into a single HTML entry point, a styles directory for layout and design, and a JavaScript directory containing modular components for game logic, puzzle generation, validation, UI rendering, and timing control.
-Execution
-No build tools are required. The project runs as a static application.
-Steps:
-Open the index.html file in a modern browser such as Chrome, Edge, or Firefox
-Optional:
-Serve using a lightweight HTTP server if required for local testing environments
-Development
-Modify game behavior through JavaScript modules in the js directory
-Update styling through styles/style.css
-Extend logic by adding new operator rules or puzzle generation strategies
-Future Extensions
-Additional puzzle variations with more complex transformation rules
-Performance optimizations in puzzle generation
-Enhanced responsiveness for mobile devices
-Advanced analytics for tracking player performance
-Context
-The project is part of a broader system focused on preparing users for game-based aptitude assessments by training pattern recognition, logical sequencing, and rapid decision-making under constraints
+🧩 Switch Challenge Trainer
+📌 Overview
+
+Switch Challenge is a browser-based symbol sequencing puzzle designed to simulate cognitive flexibility assessments used in hiring processes.
+The objective is to transform a source sequence into a target sequence by applying valid operators step-by-step. Difficulty increases as performance improves.
+
+⚙️ Core Functionality
+Dynamic puzzle generation with:
+Source sequence
+Target sequence
+Operator rules
+Each move applies one operator to move closer to the target
+Accuracy + speed determine progression
+🚀 Features
+
+✨ Dynamic puzzles with operator-based transformations
+⏱️ Timer-driven gameplay
+📊 Score tracking and progression system
+💡 Built-in rules and contextual hints
+🧱 Structured UI for clarity and usability
+💻 Desktop-optimized responsive layout
+
+📁 Project Structure
+index.html        → Entry point  
+styles/           → Styling and layout  
+js/               → Game logic modules  
+
+JavaScript modules handle:
+
+Game state management
+Puzzle generation
+Validation logic
+UI rendering
+Timer control
+▶️ Execution
+
+No build tools required. Runs as a static project.
+
+Steps
+Open index.html in a browser (Chrome / Edge / Firefox)
+Optional
+
+Run using a local server if needed:
+
+python -m http.server
+🛠️ Development
+Modify logic inside js/ modules
+Update UI styles in styles/style.css
+Extend functionality by:
+Adding new operators
+Enhancing puzzle generation
+🔮 Future Extensions
+
+🚀 More complex transformation rules
+⚡ Performance optimization
+📱 Mobile responsiveness
+📈 Player analytics and tracking
+
+🎯 Context
+
+Part of a broader system aimed at preparing users for game-based aptitude assessments by improving:
+
+Pattern recognition
+Logical sequencing
+Decision-making under constraints
