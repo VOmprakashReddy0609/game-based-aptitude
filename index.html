@@ -1,0 +1,1564 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AptitudePlay — Practice Game-Based Aptitude Tests Free</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+/* ═══════════════════════════════════════
+   ORBITAL HERO ANIMATION
+═══════════════════════════════════════ */
+.hero-visual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+#apt-orbital {
+    position: relative;
+    width: 440px;
+    height: 440px;
+    flex-shrink: 0;
+}
+
+.apt-ring {
+    position: absolute;
+    top: 50%; left: 50%;
+    border-radius: 50%;
+    border: 1px dashed rgba(100, 116, 139, 0.22);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+[data-theme="dark"] .apt-ring { border-color: rgba(148, 163, 184, 0.13); }
+.apt-ring-sm { width: 190px; height: 190px; }
+.apt-ring-md { width: 300px; height: 300px; }
+.apt-ring-lg { width: 400px; height: 400px; }
+
+.apt-hub {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 96px; height: 96px;
+    border-radius: 50%;
+    background: var(--card-bg);
+    border: 1.5px solid var(--card-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    box-shadow: 0 0 0 9px var(--bg), 0 0 0 10px var(--border), 0 6px 30px rgba(30, 144, 255, 0.09);
+    pointer-events: none;
+}
+[data-theme="dark"] .apt-hub {
+    box-shadow: 0 0 0 9px var(--bg), 0 0 0 10px var(--border), 0 6px 36px rgba(30, 144, 255, 0.18);
+}
+
+.apt-hub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-bottom: 7px; }
+.apt-hub-sq { width: 10px; height: 10px; border-radius: 3px; }
+.sq-b { background: #1E90FF; }
+.sq-a { background: #F59E0B; }
+.sq-t { background: #10B981; }
+.sq-p { background: #8B5CF6; }
+
+.apt-hub-label {
+    font-family: var(--font-display);
+    font-size: 7px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text-sub); text-align: center; line-height: 1.5;
+}
+
+.apt-pulse {
+    position: absolute; top: 50%; left: 50%;
+    width: 96px; height: 96px; border-radius: 50%;
+    border: 1.5px solid rgba(30, 144, 255, 0.28);
+    transform: translate(-50%, -50%);
+    animation: aptRipple 3.8s ease-out infinite;
+    pointer-events: none; z-index: 18;
+}
+.apt-pulse:nth-child(2) { animation-delay: 1.26s; }
+.apt-pulse:nth-child(3) { animation-delay: 2.53s; }
+
+@keyframes aptRipple {
+    0%   { width: 96px;  height: 96px;  opacity: 0.65; }
+    100% { width: 180px; height: 180px; opacity: 0; }
+}
+
+.apt-arm {
+    position: absolute; top: 50%; left: 50%;
+    width: 0; height: 0; transform-origin: 0 0;
+}
+.apt-arm-a { animation: aptSpin 13s linear infinite; transform: rotate(40deg); }
+.apt-arm-p { animation: aptSpin 19s linear infinite reverse; transform: rotate(160deg); }
+.apt-arm-t { animation: aptSpin 9s linear infinite; transform: rotate(280deg); }
+
+@keyframes aptSpin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+.apt-node-pos {
+    position: absolute; top: 0; left: 0;
+    display: flex; align-items: center; justify-content: center;
+}
+
+.apt-arm-a .apt-node-pos { transform: translateX(95px); animation: aptCounter 13s linear infinite; }
+.apt-arm-p .apt-node-pos { transform: translateX(150px); animation: aptCounter 19s linear infinite reverse; }
+.apt-arm-t .apt-node-pos { transform: translateX(65px); animation: aptCounter 9s linear infinite; }
+
+@keyframes aptCounter {
+    from { transform: translateX(var(--orbit-r, 95px)) rotate(0deg); }
+    to   { transform: translateX(var(--orbit-r, 95px)) rotate(-360deg); }
+}
+
+.apt-arm-a .apt-node-pos { --orbit-r: 95px; }
+.apt-arm-p .apt-node-pos { --orbit-r: 150px; }
+.apt-arm-t .apt-node-pos { --orbit-r: 65px; }
+
+.apt-node {
+    position: relative; border-radius: 50%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    cursor: pointer; border: 1.5px solid;
+    background: transparent; padding: 0;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+.apt-node:hover  { transform: scale(1.15); }
+.apt-node:active { transform: scale(1.05); }
+.apt-node:focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; }
+
+.apt-node-a { width: 84px; height: 84px; background: rgba(245, 158, 11, 0.08); border-color: rgba(245, 158, 11, 0.38); }
+.apt-node-a:hover { background: rgba(245, 158, 11, 0.16); border-color: rgba(245, 158, 11, 0.72); box-shadow: 0 0 0 5px rgba(245, 158, 11, 0.09), 0 4px 28px rgba(245, 158, 11, 0.22); }
+[data-theme="dark"] .apt-node-a { background: rgba(245, 158, 11, 0.11); border-color: rgba(245, 158, 11, 0.32); }
+[data-theme="dark"] .apt-node-a:hover { background: rgba(245, 158, 11, 0.2); box-shadow: 0 0 0 5px rgba(245,158,11,.1), 0 4px 36px rgba(245,158,11,.3); }
+
+.apt-node-p { width: 92px; height: 92px; background: rgba(139, 92, 246, 0.08); border-color: rgba(139, 92, 246, 0.38); }
+.apt-node-p:hover { background: rgba(139, 92, 246, 0.16); border-color: rgba(139, 92, 246, 0.72); box-shadow: 0 0 0 5px rgba(139, 92, 246, 0.09), 0 4px 28px rgba(139, 92, 246, 0.22); }
+[data-theme="dark"] .apt-node-p { background: rgba(139, 92, 246, 0.11); border-color: rgba(139, 92, 246, 0.32); }
+[data-theme="dark"] .apt-node-p:hover { background: rgba(139, 92, 246, 0.22); box-shadow: 0 0 0 5px rgba(139,92,246,.12), 0 4px 40px rgba(139,92,246,.35); }
+
+.apt-node-t { width: 74px; height: 74px; background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.38); }
+.apt-node-t:hover { background: rgba(16, 185, 129, 0.16); border-color: rgba(16, 185, 129, 0.72); box-shadow: 0 0 0 5px rgba(16, 185, 129, 0.09), 0 4px 28px rgba(16, 185, 129, 0.22); }
+[data-theme="dark"] .apt-node-t { background: rgba(16, 185, 129, 0.11); border-color: rgba(16, 185, 129, 0.32); }
+[data-theme="dark"] .apt-node-t:hover { background: rgba(16, 185, 129, 0.2); box-shadow: 0 0 0 5px rgba(16,185,129,.1), 0 4px 32px rgba(16,185,129,.3); }
+
+.apt-icon { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 5px; flex-shrink: 0; }
+.apt-icon svg { width: 14px; height: 14px; }
+.icon-a { background: rgba(245, 158, 11, 0.18); color: #D97706; }
+.icon-p { background: rgba(139, 92, 246, 0.18); color: #7C3AED; }
+.icon-t { background: rgba(16, 185, 129, 0.18); color: #059669; }
+[data-theme="dark"] .icon-a { color: #FBBF24; }
+[data-theme="dark"] .icon-p { color: #A78BFA; }
+[data-theme="dark"] .icon-t { color: #34D399; }
+
+.apt-label { font-family: var(--font-display); font-size: 8.5px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; text-align: center; line-height: 1.35; padding: 0 5px; }
+.lbl-a { color: #B45309; }
+.lbl-p { color: #6D28D9; }
+.lbl-t { color: #065F46; }
+[data-theme="dark"] .lbl-a { color: #FCD34D; }
+[data-theme="dark"] .lbl-p { color: #C4B5FD; }
+[data-theme="dark"] .lbl-t { color: #6EE7B7; }
+
+.apt-dot { position: absolute; border-radius: 50%; background: rgba(30, 144, 255, 0.42); pointer-events: none; animation: aptDrift 7s ease-in-out infinite; }
+[data-theme="dark"] .apt-dot { background: rgba(30, 144, 255, 0.6); }
+.apt-dot:nth-child(1)  { width: 3px; height: 3px; top: 9%;  left: 74%; animation-delay: 0s;    }
+.apt-dot:nth-child(2)  { width: 4px; height: 4px; top: 80%; left: 12%; animation-delay: 1.5s;  }
+.apt-dot:nth-child(3)  { width: 2px; height: 2px; top: 6%;  left: 40%; animation-delay: 3s;    }
+.apt-dot:nth-child(4)  { width: 3px; height: 3px; top: 88%; left: 62%; animation-delay: 0.8s;  }
+.apt-dot:nth-child(5)  { width: 2px; height: 2px; top: 46%; left: 94%; animation-delay: 3.8s;  }
+.apt-dot:nth-child(6)  { width: 4px; height: 4px; top: 64%; left: 4%;  animation-delay: 2.2s;  }
+
+@keyframes aptDrift {
+    0%, 100% { transform: translateY(0);    opacity: 0.45; }
+    50%       { transform: translateY(-14px); opacity: 1;   }
+}
+
+.apt-hint { text-align: center; font-size: 12px; color: var(--text-sub); margin-top: 12px; letter-spacing: 0.04em; font-family: var(--font-body); }
+
+@media (max-width: 1100px) {
+    #apt-orbital { width: 360px; height: 360px; }
+    .apt-ring-sm { width: 156px; height: 156px; }
+    .apt-ring-md { width: 245px; height: 245px; }
+    .apt-ring-lg { width: 328px; height: 328px; }
+    .apt-arm-a .apt-node-pos { --orbit-r: 78px;  transform: translateX(78px);  }
+    .apt-arm-p .apt-node-pos { --orbit-r: 122px; transform: translateX(122px); }
+    .apt-arm-t .apt-node-pos { --orbit-r: 53px;  transform: translateX(53px);  }
+}
+@media (max-width: 900px) {
+    .hero-visual { display: none; }
+}
+
+
+/* ═══════════════════════════════════════
+   WHY PRACTICE — PENTAGON TRAIT WHEEL
+   5 circles equally spaced on a fixed ring.
+   The entire wheel rotates so the active
+   node sits at the top. Auto-advances CW.
+═══════════════════════════════════════ */
+
+.why-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+}
+
+@media (max-width: 960px) {
+    .why-grid {
+        grid-template-columns: 1fr !important;
+        gap: 48px;
+    }
+    .why-visual { display: none; }
+}
+
+/* ── Trait info card ── */
+.trait-info-card {
+    margin-top: 28px;
+    padding: 20px 22px;
+    border-radius: 14px;
+    border: 1.5px solid transparent;
+    background: var(--card-bg, #fff);
+    transition: all 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+    overflow: hidden;
+    position: relative;
+}
+.trait-info-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 13px;
+    opacity: 0.06;
+    pointer-events: none;
+    transition: opacity 0.38s;
+}
+.trait-info-card.visible { opacity: 1; transform: translateY(0); }
+.trait-info-card.hidden  { opacity: 0; transform: translateY(8px); pointer-events: none; height: 0; margin-top: 0; padding: 0; }
+
+.trait-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+.trait-card-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+}
+.trait-card-icon svg { width: 18px; height: 18px; }
+.trait-card-name {
+    font-family: var(--font-display);
+    font-size: 16px; font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+}
+.trait-card-tagline {
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--text-sub);
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+.trait-card-points {
+    list-style: none;
+    padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: 7px;
+}
+.trait-card-points li {
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--text);
+    display: flex; align-items: flex-start; gap: 8px;
+    line-height: 1.5;
+}
+.trait-card-points li::before {
+    content: '';
+    width: 6px; height: 6px; border-radius: 50%;
+    flex-shrink: 0; margin-top: 6px;
+}
+
+/* Colour themes */
+.trait-info-card[data-trait="speed"] { border-color: rgba(30,144,255,0.28); }
+.trait-info-card[data-trait="speed"]::before { background: #1E90FF; opacity: 0.05; }
+.trait-info-card[data-trait="speed"] .trait-card-icon { background: rgba(30,144,255,0.14); color: #1E90FF; }
+.trait-info-card[data-trait="speed"] .trait-card-name { color: #1060CC; }
+.trait-info-card[data-trait="speed"] .trait-card-points li::before { background: #1E90FF; }
+[data-theme="dark"] .trait-info-card[data-trait="speed"] .trait-card-name { color: #60AAFF; }
+
+.trait-info-card[data-trait="adaptability"] { border-color: rgba(245,158,11,0.32); }
+.trait-info-card[data-trait="adaptability"]::before { background: #F59E0B; opacity: 0.05; }
+.trait-info-card[data-trait="adaptability"] .trait-card-icon { background: rgba(245,158,11,0.14); color: #D97706; }
+.trait-info-card[data-trait="adaptability"] .trait-card-name { color: #92400E; }
+.trait-info-card[data-trait="adaptability"] .trait-card-points li::before { background: #F59E0B; }
+[data-theme="dark"] .trait-info-card[data-trait="adaptability"] .trait-card-name { color: #FCD34D; }
+
+.trait-info-card[data-trait="cognitive"] { border-color: rgba(16,185,129,0.32); }
+.trait-info-card[data-trait="cognitive"]::before { background: #10B981; opacity: 0.05; }
+.trait-info-card[data-trait="cognitive"] .trait-card-icon { background: rgba(16,185,129,0.14); color: #059669; }
+.trait-info-card[data-trait="cognitive"] .trait-card-name { color: #065F46; }
+.trait-info-card[data-trait="cognitive"] .trait-card-points li::before { background: #10B981; }
+[data-theme="dark"] .trait-info-card[data-trait="cognitive"] .trait-card-name { color: #34D399; }
+
+.trait-info-card[data-trait="precision"] { border-color: rgba(139,92,246,0.32); }
+.trait-info-card[data-trait="precision"]::before { background: #8B5CF6; opacity: 0.05; }
+.trait-info-card[data-trait="precision"] .trait-card-icon { background: rgba(139,92,246,0.14); color: #7C3AED; }
+.trait-info-card[data-trait="precision"] .trait-card-name { color: #4C1D95; }
+.trait-info-card[data-trait="precision"] .trait-card-points li::before { background: #8B5CF6; }
+[data-theme="dark"] .trait-info-card[data-trait="precision"] .trait-card-name { color: #C4B5FD; }
+
+.trait-info-card[data-trait="judgement"] { border-color: rgba(239,68,68,0.28); }
+.trait-info-card[data-trait="judgement"]::before { background: #EF4444; opacity: 0.05; }
+.trait-info-card[data-trait="judgement"] .trait-card-icon { background: rgba(239,68,68,0.12); color: #DC2626; }
+.trait-info-card[data-trait="judgement"] .trait-card-name { color: #991B1B; }
+.trait-info-card[data-trait="judgement"] .trait-card-points li::before { background: #EF4444; }
+[data-theme="dark"] .trait-info-card[data-trait="judgement"] .trait-card-name { color: #FCA5A5; }
+
+
+/* ══════════════════════════════════
+   PENTAGON WHEEL
+══════════════════════════════════ */
+.why-visual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+/* Outer container — fixed size, acts as the viewport */
+#trait-wheel {
+    position: relative;
+    width: 420px;
+    height: 420px;
+    flex-shrink: 0;
+}
+
+/* The rotating layer — holds the ring + all nodes */
+#trait-wheel-rotor {
+    position: absolute;
+    inset: 0;
+    /* JS will set transform: rotate(Xdeg) with transition */
+    transition: transform 0.72s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* The dashed ring circle */
+.tw-ring {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 340px; height: 340px;
+    border-radius: 50%;
+    border: 1.5px dashed rgba(100,116,139,0.22);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+[data-theme="dark"] .tw-ring { border-color: rgba(148,163,184,0.14); }
+
+/* Each node is positioned absolutely on the ring */
+/* JS will place them via inline top/left/transform */
+.tw-node {
+    position: absolute;
+    width: 82px; height: 82px;
+    border-radius: 50%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    cursor: pointer;
+    border: 1.5px solid;
+    background: transparent;
+    padding: 0;
+    /* counter-rotate label so it stays upright */
+    /* JS sets --tw-counter on each node */
+    transition:
+        box-shadow 0.3s ease,
+        border-color 0.3s ease,
+        background 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+.tw-node:focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; }
+
+/* Counter-rotation wrapper inside each node keeps label upright */
+.tw-node-inner {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    width: 100%; height: 100%;
+    /* JS applies counter-rotation transform here */
+    transition: transform 0.72s cubic-bezier(0.65, 0, 0.35, 1);
+    pointer-events: none;
+}
+
+/* Icon pill */
+.tw-icon {
+    width: 28px; height: 28px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 5px; flex-shrink: 0;
+}
+.tw-icon svg { width: 14px; height: 14px; }
+
+/* Label */
+.tw-lbl {
+    font-family: var(--font-display);
+    font-size: 7.5px; font-weight: 700;
+    letter-spacing: 0.07em; text-transform: uppercase;
+    text-align: center; line-height: 1.3; padding: 0 4px;
+}
+
+/* ── Per-trait colours ── */
+/* Speed — blue */
+.tw-node[data-trait="speed"] {
+    background: rgba(30,144,255,0.07);
+    border-color: rgba(30,144,255,0.35);
+}
+.tw-node[data-trait="speed"] .tw-icon { background: rgba(30,144,255,0.14); color: #1E90FF; }
+.tw-node[data-trait="speed"] .tw-lbl  { color: #1060CC; }
+[data-theme="dark"] .tw-node[data-trait="speed"] .tw-lbl { color: #60AAFF; }
+.tw-node[data-trait="speed"].tw-active,
+.tw-node[data-trait="speed"]:hover {
+    background: rgba(30,144,255,0.15);
+    border-color: rgba(30,144,255,0.72);
+    box-shadow: 0 0 0 5px rgba(30,144,255,0.10), 0 4px 28px rgba(30,144,255,0.22);
+}
+
+/* Adaptability — amber */
+.tw-node[data-trait="adaptability"] {
+    background: rgba(245,158,11,0.07);
+    border-color: rgba(245,158,11,0.35);
+}
+.tw-node[data-trait="adaptability"] .tw-icon { background: rgba(245,158,11,0.14); color: #D97706; }
+.tw-node[data-trait="adaptability"] .tw-lbl  { color: #92400E; }
+[data-theme="dark"] .tw-node[data-trait="adaptability"] .tw-lbl { color: #FCD34D; }
+.tw-node[data-trait="adaptability"].tw-active,
+.tw-node[data-trait="adaptability"]:hover {
+    background: rgba(245,158,11,0.16);
+    border-color: rgba(245,158,11,0.72);
+    box-shadow: 0 0 0 5px rgba(245,158,11,0.10), 0 4px 28px rgba(245,158,11,0.22);
+}
+
+/* Cognitive — teal */
+.tw-node[data-trait="cognitive"] {
+    background: rgba(16,185,129,0.07);
+    border-color: rgba(16,185,129,0.35);
+}
+.tw-node[data-trait="cognitive"] .tw-icon { background: rgba(16,185,129,0.14); color: #059669; }
+.tw-node[data-trait="cognitive"] .tw-lbl  { color: #065F46; }
+[data-theme="dark"] .tw-node[data-trait="cognitive"] .tw-lbl { color: #34D399; }
+.tw-node[data-trait="cognitive"].tw-active,
+.tw-node[data-trait="cognitive"]:hover {
+    background: rgba(16,185,129,0.16);
+    border-color: rgba(16,185,129,0.72);
+    box-shadow: 0 0 0 5px rgba(16,185,129,0.10), 0 4px 28px rgba(16,185,129,0.22);
+}
+
+/* Precision — purple */
+.tw-node[data-trait="precision"] {
+    background: rgba(139,92,246,0.07);
+    border-color: rgba(139,92,246,0.35);
+}
+.tw-node[data-trait="precision"] .tw-icon { background: rgba(139,92,246,0.14); color: #7C3AED; }
+.tw-node[data-trait="precision"] .tw-lbl  { color: #4C1D95; }
+[data-theme="dark"] .tw-node[data-trait="precision"] .tw-lbl { color: #C4B5FD; }
+.tw-node[data-trait="precision"].tw-active,
+.tw-node[data-trait="precision"]:hover {
+    background: rgba(139,92,246,0.16);
+    border-color: rgba(139,92,246,0.72);
+    box-shadow: 0 0 0 5px rgba(139,92,246,0.10), 0 4px 28px rgba(139,92,246,0.22);
+}
+
+/* Judgement — coral */
+.tw-node[data-trait="judgement"] {
+    background: rgba(239,68,68,0.07);
+    border-color: rgba(239,68,68,0.32);
+}
+.tw-node[data-trait="judgement"] .tw-icon { background: rgba(239,68,68,0.12); color: #DC2626; }
+.tw-node[data-trait="judgement"] .tw-lbl  { color: #991B1B; }
+[data-theme="dark"] .tw-node[data-trait="judgement"] .tw-lbl { color: #FCA5A5; }
+.tw-node[data-trait="judgement"].tw-active,
+.tw-node[data-trait="judgement"]:hover {
+    background: rgba(239,68,68,0.15);
+    border-color: rgba(239,68,68,0.70);
+    box-shadow: 0 0 0 5px rgba(239,68,68,0.10), 0 4px 28px rgba(239,68,68,0.20);
+}
+
+/* Active node scale bump */
+.tw-node.tw-active { transform: scale(1.13) !important; }
+
+/* ── Central hub ── */
+.tw-hub {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 96px; height: 96px; border-radius: 50%;
+    background: var(--card-bg, #fff);
+    border: 1.5px solid var(--card-border, #e2e8f0);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    z-index: 30;
+    box-shadow: 0 0 0 8px var(--bg, #f8fafc),
+                0 0 0 9.5px var(--border, #e2e8f0),
+                0 4px 24px rgba(30,144,255,0.10);
+    pointer-events: none;
+}
+[data-theme="dark"] .tw-hub {
+    box-shadow: 0 0 0 8px var(--bg), 0 0 0 9.5px var(--border), 0 4px 28px rgba(30,144,255,0.20);
+}
+
+.tw-hub-label {
+    font-family: var(--font-display);
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 0.10em; text-transform: uppercase;
+    color: var(--text-sub); text-align: center; line-height: 1.45;
+}
+.tw-hub-sub {
+    font-family: var(--font-body);
+    font-size: 7px; color: var(--text-sub);
+    opacity: 0.65; text-align: center;
+    line-height: 1.5; margin-top: 2px;
+}
+
+/* Hub ripple */
+.tw-pulse {
+    position: absolute; top: 50%; left: 50%;
+    width: 96px; height: 96px; border-radius: 50%;
+    border: 1.5px solid rgba(30,144,255,0.22);
+    transform: translate(-50%,-50%);
+    animation: twRipple 4s ease-out infinite;
+    pointer-events: none; z-index: 28;
+}
+.tw-pulse:nth-child(2) { animation-delay: 1.33s; }
+.tw-pulse:nth-child(3) { animation-delay: 2.66s; }
+@keyframes twRipple {
+    0%   { width: 96px;  height: 96px;  opacity: 0.55; }
+    100% { width: 180px; height: 180px; opacity: 0; }
+}
+
+/* Active indicator pointer — small triangle at top-center of wheel */
+.tw-pointer {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 9px solid rgba(30,144,255,0.55);
+    z-index: 35;
+    pointer-events: none;
+    filter: drop-shadow(0 2px 4px rgba(30,144,255,0.3));
+    transition: border-top-color 0.38s;
+}
+
+/* Ambient dots */
+.tw-dot {
+    position: absolute; border-radius: 50%;
+    background: rgba(100,116,139,0.3);
+    pointer-events: none;
+    animation: twDrift 8s ease-in-out infinite;
+}
+[data-theme="dark"] .tw-dot { background: rgba(148,163,184,0.4); }
+.tw-dot:nth-child(1) { width: 3px; height: 3px; top: 8%;  left: 78%; animation-delay: 0s;   }
+.tw-dot:nth-child(2) { width: 4px; height: 4px; top: 83%; left: 14%; animation-delay: 1.8s; }
+.tw-dot:nth-child(3) { width: 2px; height: 2px; top: 5%;  left: 36%; animation-delay: 3.2s; }
+.tw-dot:nth-child(4) { width: 3px; height: 3px; top: 91%; left: 62%; animation-delay: 0.6s; }
+.tw-dot:nth-child(5) { width: 2px; height: 2px; top: 48%; left: 96%; animation-delay: 4s;   }
+@keyframes twDrift {
+    0%, 100% { transform: translateY(0);     opacity: 0.35; }
+    50%       { transform: translateY(-12px); opacity: 0.85; }
+}
+
+/* Progress dots under wheel */
+.tw-dots {
+    display: flex; gap: 8px; margin-top: 16px;
+}
+.tw-dot-btn {
+    width: 8px; height: 8px; border-radius: 50%;
+    border: none; cursor: pointer; padding: 0;
+    background: rgba(100,116,139,0.28);
+    transition: background 0.3s, transform 0.3s;
+}
+.tw-dot-btn.active {
+    transform: scale(1.35);
+}
+.tw-dot-btn[data-trait="speed"].active      { background: #1E90FF; }
+.tw-dot-btn[data-trait="adaptability"].active { background: #F59E0B; }
+.tw-dot-btn[data-trait="cognitive"].active  { background: #10B981; }
+.tw-dot-btn[data-trait="precision"].active  { background: #8B5CF6; }
+.tw-dot-btn[data-trait="judgement"].active  { background: #EF4444; }
+
+.tw-hint {
+    text-align: center;
+    font-size: 11.5px; color: var(--text-sub);
+    margin-top: 10px; letter-spacing: 0.04em;
+    font-family: var(--font-body);
+}
+    </style>
+</head>
+<body>
+
+    <!-- ═══════════════════════════════════════
+         NAVIGATION BAR
+    ═══════════════════════════════════════ -->
+    <nav id="navbar">
+        <div class="nav-inner">
+            <div class="nav-logo">
+                <span class="logo-icon">
+                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="2" y="2" width="10" height="10" rx="2" fill="#1E90FF"/>
+                        <rect x="16" y="2" width="10" height="10" rx="2" fill="#F59E0B" opacity="0.85"/>
+                        <rect x="2" y="16" width="10" height="10" rx="2" fill="#10B981" opacity="0.85"/>
+                        <rect x="16" y="16" width="10" height="10" rx="2" fill="#8B5CF6" opacity="0.85"/>
+                    </svg>
+                </span>
+                <span class="logo-text">AptitudePlay</span>
+            </div>
+            <div class="nav-links">
+                <a href="#games" class="nav-link">Games</a>
+                <a href="#how-it-works" class="nav-link">How It Works</a>
+                <a href="#why-practice" class="nav-link">Why Practice?</a>
+                <a href="#contact" class="nav-link contact-nav-link">
+                    Contact
+                    <span class="nav-link-icon">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <polyline points="22,6 12,13 2,6"/>
+                        </svg>
+                    </span>
+                </a>
+            </div>
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                    </svg>
+                    <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
+                </button>
+                <a href="#games" class="btn-primary nav-cta">Start Practicing</a>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="#games" class="mobile-link">Games</a>
+            <a href="#how-it-works" class="mobile-link">How It Works</a>
+            <a href="#why-practice" class="mobile-link">Why Practice?</a>
+            <a href="#contact" class="mobile-link">
+                Contact
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <polyline points="22,6 12,13 2,6"/>
+                </svg>
+            </a>
+            <a href="#games" class="btn-primary mobile-cta">Start Practicing</a>
+        </div>
+    </nav>
+
+    <!-- ═══════════════════════════════════════
+         LANDING VIEW
+    ═══════════════════════════════════════ -->
+    <div id="landing">
+
+        <!-- ── HERO SECTION ── -->
+        <section class="hero">
+            <div class="hero-inner">
+
+                <!-- LEFT: text content -->
+                <div class="hero-content">
+                    <h1 class="hero-heading" data-aos="fade-up" data-aos-delay="80">
+                        Focus. Play.<br>Crack the assessment.
+                    </h1>
+                    <p class="hero-subtext" data-aos="fade-up" data-aos-delay="160">
+                        Practice the exact game-based aptitude tests used by top employers. Sharpen your cognitive skills for free in a beautiful, focused space.
+                    </p>
+                    <div class="hero-ctas" data-aos="fade-up" data-aos-delay="240">
+                        <a href="#games" class="btn-primary btn-lg">Explore Games</a>
+                        <a href="#how-it-works" class="btn-secondary btn-lg">How It Works</a>
+                    </div>
+                    <div class="social-proof" data-aos="fade-up" data-aos-delay="320">
+                        <div class="avatar-stack">
+                            <div class="avatar av1"></div>
+                            <div class="avatar av2"></div>
+                            <div class="avatar av3"></div>
+                            <div class="avatar av4"></div>
+                            <div class="avatar av5"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT: orbital animation -->
+                <div class="hero-visual" data-aos="fade-left" data-aos-delay="180">
+                    <div id="apt-orbital">
+                        <div class="apt-dot"></div>
+                        <div class="apt-dot"></div>
+                        <div class="apt-dot"></div>
+                        <div class="apt-dot"></div>
+                        <div class="apt-dot"></div>
+                        <div class="apt-dot"></div>
+                        <div class="apt-ring apt-ring-sm"></div>
+                        <div class="apt-ring apt-ring-md"></div>
+                        <div class="apt-ring apt-ring-lg"></div>
+                        <div class="apt-pulse"></div>
+                        <div class="apt-pulse"></div>
+                        <div class="apt-pulse"></div>
+                        <div class="apt-hub">
+                            <div class="apt-hub-grid">
+                                <div class="apt-hub-sq sq-b"></div>
+                                <div class="apt-hub-sq sq-a"></div>
+                                <div class="apt-hub-sq sq-t"></div>
+                                <div class="apt-hub-sq sq-p"></div>
+                            </div>
+                            <div class="apt-hub-label">Aptitude<br>Play</div>
+                        </div>
+                        <div class="apt-arm apt-arm-a">
+                            <div class="apt-node-pos">
+                                <button class="apt-node apt-node-a"
+                                    onclick="if(typeof loadGame==='function'){loadGame('motion-challenge')}else{document.getElementById('games').scrollIntoView({behavior:'smooth'})}"
+                                    aria-label="Play Motion Challenge">
+                                    <div class="apt-icon icon-a">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="5 9 2 12 5 15"/><polyline points="9 5 12 2 15 5"/>
+                                            <polyline points="15 19 12 22 9 19"/><polyline points="19 9 22 12 19 15"/>
+                                            <line x1="2" y1="12" x2="22" y2="12"/><line x1="12" y1="2" x2="12" y2="22"/>
+                                        </svg>
+                                    </div>
+                                    <div class="apt-label lbl-a">Motion<br>Challenge</div>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="apt-arm apt-arm-p">
+                            <div class="apt-node-pos">
+                                <button class="apt-node apt-node-p"
+                                    onclick="if(typeof loadGame==='function'){loadGame('switch-challenge')}else{document.getElementById('games').scrollIntoView({behavior:'smooth'})}"
+                                    aria-label="Play Switch Challenge">
+                                    <div class="apt-icon icon-p">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/>
+                                            <polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/>
+                                            <line x1="4" y1="4" x2="9" y2="9"/>
+                                        </svg>
+                                    </div>
+                                    <div class="apt-label lbl-p">Switch<br>Challenge</div>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="apt-arm apt-arm-t">
+                            <div class="apt-node-pos">
+                                <button class="apt-node apt-node-t"
+                                    onclick="if(typeof loadGame==='function'){loadGame('geo-sudoku')}else{document.getElementById('games').scrollIntoView({behavior:'smooth'})}"
+                                    aria-label="Play Geo Sudoku">
+                                    <div class="apt-icon icon-t">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                            <line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/>
+                                            <line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/>
+                                        </svg>
+                                    </div>
+                                    <div class="apt-label lbl-t">Geo<br>Sudoku</div>
+                                </button>
+                            </div>
+                        </div>
+                    </div><!-- /#apt-orbital -->
+                    <p class="apt-hint">Click any game to play →</p>
+                </div><!-- /.hero-visual -->
+
+            </div><!-- /.hero-inner -->
+        </section>
+
+        <!-- ── FEATURED GAMES SECTION ── -->
+        <section class="games-section" id="games">
+            <div class="section-inner">
+                <div class="section-header" data-aos="fade-up">
+                    <p class="section-label">Core Hiring Games</p>
+                    <h2 class="section-title">Practice the Games That Matter</h2>
+                    <p class="section-desc">Three game-based assessments used by leading companies worldwide. Master them here, for free.</p>
+                </div>
+                <div class="games-grid">
+                    <!-- Motion Challenge Card -->
+                    <div class="game-card" data-aos="fade-up" data-aos-delay="0" data-game="motion-challenge">
+                        <div class="card-accent accent-amber"></div>
+                        <div class="card-icon-wrap icon-amber">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="5 9 2 12 5 15"/><polyline points="9 5 12 2 15 5"/>
+                                <polyline points="15 19 12 22 9 19"/><polyline points="19 9 22 12 19 15"/>
+                                <line x1="2" y1="12" x2="22" y2="12"/><line x1="12" y1="2" x2="12" y2="22"/>
+                            </svg>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="card-title">Motion Challenge</h3>
+                            <p class="card-desc">Track moving objects and predict trajectories. Tests spatial awareness and processing speed under pressure.</p>
+                            <div class="card-tags">
+                                <span class="tag">#Spatial</span>
+                                <span class="tag">#Memory</span>
+                                <span class="tag">#Speed</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="card-difficulty">
+                                <span class="diff-dot"></span><span class="diff-dot"></span><span class="diff-dot"></span>
+                                <span class="diff-dot inactive"></span><span class="diff-dot inactive"></span>
+                                <span class="diff-label">Intermediate</span>
+                            </div>
+                            <button class="card-play-btn btn-play-amber">
+                                Play Now
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Switch Challenge Card -->
+                    <div class="game-card card-featured" data-aos="fade-up" data-aos-delay="100" data-game="switch-challenge">
+                        <div class="card-accent accent-purple"></div>
+                        <div class="featured-badge">Most Popular</div>
+                        <div class="card-icon-wrap icon-purple">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/>
+                                <polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/>
+                                <line x1="4" y1="4" x2="9" y2="9"/>
+                            </svg>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="card-title">Switch Challenge</h3>
+                            <p class="card-desc">Rapidly switch between rules and patterns. Measures cognitive flexibility and executive function under constraints.</p>
+                            <div class="card-tags">
+                                <span class="tag">#Logic</span>
+                                <span class="tag">#Flexibility</span>
+                                <span class="tag">#Focus</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="card-difficulty">
+                                <span class="diff-dot"></span><span class="diff-dot"></span><span class="diff-dot"></span><span class="diff-dot"></span>
+                                <span class="diff-dot inactive"></span>
+                                <span class="diff-label">Advanced</span>
+                            </div>
+                            <button class="card-play-btn btn-play-purple">
+                                Play Now
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Geosudoku Card -->
+                    <div class="game-card" data-aos="fade-up" data-aos-delay="200" data-game="geo-sudoku">
+                        <div class="card-accent accent-teal"></div>
+                        <div class="card-icon-wrap icon-teal">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/>
+                                <line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/>
+                            </svg>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="card-title">Geosudoku</h3>
+                            <p class="card-desc">Fill spatial grids using geographic logic. Combines pattern recognition with structured analytical reasoning.</p>
+                            <div class="card-tags">
+                                <span class="tag">#Pattern</span>
+                                <span class="tag">#Analysis</span>
+                                <span class="tag">#Grid</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="card-difficulty">
+                                <span class="diff-dot"></span><span class="diff-dot"></span>
+                                <span class="diff-dot inactive"></span><span class="diff-dot inactive"></span><span class="diff-dot inactive"></span>
+                                <span class="diff-label">Beginner</span>
+                            </div>
+                            <button class="card-play-btn btn-play-teal">
+                                Play Now
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── HOW IT WORKS SECTION ── -->
+        <section class="how-section" id="how-it-works">
+            <div class="section-inner">
+                <div class="section-header" data-aos="fade-up">
+                    <p class="section-label">Simple Process</p>
+                    <h2 class="section-title">How It Works</h2>
+                    <p class="section-desc">Three steps from opening the page to interview-ready confidence.</p>
+                </div>
+                <div class="steps-wrap">
+                    <div class="steps-connector" aria-hidden="true">
+                        
+                    </div>
+                    <div class="steps-grid">
+                        <div class="step" data-aos="fade-up" data-aos-delay="0">
+                            <div class="step-number">01</div>
+                            <div class="step-icon-wrap">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+                                </svg>
+                            </div>
+                            <h3 class="step-title">Choose a Game</h3>
+                            <p class="step-desc">Pick from three targeted assessments. Each maps directly to real hiring tests from top companies.</p>
+                        </div>
+                        <div class="step" data-aos="fade-up" data-aos-delay="120">
+                            <div class="step-number">02</div>
+                            <div class="step-icon-wrap">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                            </div>
+                            <h3 class="step-title">Practice in Peace</h3>
+                            <p class="step-desc">A clean, distraction-free interface. No ads, no noise — just you and the game, building real skills.</p>
+                        </div>
+                        <div class="step" data-aos="fade-up" data-aos-delay="240">
+                            <div class="step-number">03</div>
+                            <div class="step-icon-wrap">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
+                                </svg>
+                            </div>
+                            <h3 class="step-title">Crush the Real Test</h3>
+                            <p class="step-desc">Walk into assessments knowing you've already faced the challenge. Confidence built through reps, not luck.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── WHY PRACTICE SECTION ── -->
+        <section class="why-section" id="why-practice">
+            <div class="section-inner">
+                <div class="why-grid">
+
+                    <!-- LEFT: existing content (unchanged) -->
+                    <div class="why-content" data-aos="fade-right">
+                        <p class="section-label">The Science of Practice</p>
+                        <h2 class="section-title">Why Game-Based Tests Are Different</h2>
+                        <p class="section-desc">Traditional aptitude tests measure static knowledge. Game-based assessments reveal <em>how you think</em> — your speed, adaptability, and cognitive patterns under real pressure.</p>
+                        <ul class="why-list">
+                            <li>
+                                <span class="why-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                </span>
+                                Used by Cognizant, Capgemini, Accenture and lot more
+                            </li>
+                            <li>
+                                <span class="why-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                </span>
+                                Familiarity with format reduces anxiety on test day
+                            </li>
+                            <li>
+                                <span class="why-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                </span>
+                                Repeated practice measurably improves cognitive scores
+                            </li>
+                            <li>
+                                <span class="why-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                </span>
+                                100% free — no account, no paywall, no catch
+                            </li>
+                        </ul>
+
+                        <!-- ── TRAIT INFO CARD (shown on node click / auto-advance) ── -->
+                        <div class="trait-info-card hidden" id="traitCard" data-trait="">
+                            <div class="trait-card-header">
+                                <div class="trait-card-icon" id="traitIcon"></div>
+                                <div class="trait-card-name" id="traitName"></div>
+                            </div>
+                            <p class="trait-card-tagline" id="traitTagline"></p>
+                            <ul class="trait-card-points" id="traitPoints"></ul>
+                        </div>
+
+                        <a href="#games" class="btn-primary btn-lg" style="display:inline-flex;margin-top:28px;">Start for Free →</a>
+                    </div>
+
+                    <!-- RIGHT: Pentagon Trait Wheel (NEW) -->
+                    <div class="why-visual" data-aos="fade-left" data-aos-delay="160">
+                        <div id="trait-wheel">
+                            <!-- Ambient dots (fixed, not part of rotor) -->
+                            <div class="tw-dot"></div>
+                            <div class="tw-dot"></div>
+                            <div class="tw-dot"></div>
+                            <div class="tw-dot"></div>
+                            <div class="tw-dot"></div>
+
+                            <!-- Active indicator pointer at top -->
+                            <div class="tw-pointer" id="twPointer"></div>
+
+                            <!-- The rotating layer -->
+                            <div id="trait-wheel-rotor">
+                                <!-- Ring track -->
+                                <div class="tw-ring"></div>
+
+                                <!--
+                                    5 node buttons.
+                                    Initial angular positions (clockwise from top = -90°):
+                                      0: speed       → -90°  (top)
+                                      1: adaptability→ -18°  (top-right)
+                                      2: cognitive   →  54°  (bottom-right)
+                                      3: precision   → 126°  (bottom-left)
+                                      4: judgement   → 198°  (top-left)
+                                    Each is placed via JS to sit on the ring circumference.
+                                -->
+
+                                <button class="tw-node" data-trait="speed" aria-label="Speed trait">
+                                    <div class="tw-node-inner">
+                                        <div class="tw-icon">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                                            </svg>
+                                        </div>
+                                        <div class="tw-lbl">Speed</div>
+                                    </div>
+                                </button>
+
+                                <button class="tw-node" data-trait="adaptability" aria-label="Adaptability trait">
+                                    <div class="tw-node-inner">
+                                        <div class="tw-icon">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                                <polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+                                                <polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+                                            </svg>
+                                        </div>
+                                        <div class="tw-lbl">Adapt</div>
+                                    </div>
+                                </button>
+
+                                <button class="tw-node" data-trait="cognitive" aria-label="Cognitive skills trait">
+                                    <div class="tw-node-inner">
+                                        <div class="tw-icon">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                                                <circle cx="12" cy="12" r="10"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                                            </svg>
+                                        </div>
+                                        <div class="tw-lbl">Cognitive</div>
+                                    </div>
+                                </button>
+
+                                <button class="tw-node" data-trait="precision" aria-label="Precision trait">
+                                    <div class="tw-node-inner">
+                                        <div class="tw-icon">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="12" cy="12" r="10"/>
+                                                <circle cx="12" cy="12" r="3"/>
+                                                <line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/>
+                                                <line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/>
+                                            </svg>
+                                        </div>
+                                        <div class="tw-lbl">Precision</div>
+                                    </div>
+                                </button>
+
+                                <button class="tw-node" data-trait="judgement" aria-label="Judgement trait">
+                                    <div class="tw-node-inner">
+                                        <div class="tw-icon">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                            </svg>
+                                        </div>
+                                        <div class="tw-lbl">Judgement</div>
+                                    </div>
+                                </button>
+
+                            </div><!-- /#trait-wheel-rotor -->
+
+                            <!-- Hub (fixed, above rotor) -->
+                            <div class="tw-pulse"></div>
+                            <div class="tw-pulse"></div>
+                            <div class="tw-pulse"></div>
+                            <div class="tw-hub">
+                                <div class="tw-hub-label">Core<br>Traits</div>
+                                <div class="tw-hub-sub">click to explore</div>
+                            </div>
+
+                        </div><!-- /#trait-wheel -->
+
+                        <!-- Progress dots -->
+                        <div class="tw-dots" id="twDots">
+                            <button class="tw-dot-btn" data-trait="speed"        aria-label="Speed"></button>
+                            <button class="tw-dot-btn" data-trait="adaptability" aria-label="Adaptability"></button>
+                            <button class="tw-dot-btn" data-trait="cognitive"    aria-label="Cognitive"></button>
+                            <button class="tw-dot-btn" data-trait="precision"    aria-label="Precision"></button>
+                            <button class="tw-dot-btn" data-trait="judgement"    aria-label="Judgement"></button>
+                        </div>
+                        <p class="tw-hint">Click a trait to learn more →</p>
+                    </div><!-- /.why-visual -->
+
+                </div><!-- /.why-grid -->
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════
+             CONTACT SECTION
+        ═══════════════════════════════════════ -->
+        <section class="contact-section" id="contact">
+            <div class="section-inner">
+                <div class="contact-wrapper" data-aos="fade-up">
+                    <div class="contact-header">
+                        <span class="contact-icon-animated">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                        </span>
+                        <h2 class="contact-title">Get in Touch</h2>
+                        <p class="contact-subtitle">Have questions or feedback? I'd love to hear from you.</p>
+                    </div>
+                    <div class="contact-card">
+                        <div class="contact-card-glow"></div>
+                        <div class="contact-avatar">
+                            <div class="avatar-circle">
+                                <span class="avatar-initials">VO</span>
+                            </div>
+                            <div class="avatar-pulse"></div>
+                        </div>
+                        <h3 class="developer-name">
+                            Vanampally Om Prakash Reddy
+                            <span class="developer-role-badge">Developer</span>
+                        </h3>
+                        <div class="contact-divider">
+                            <span class="divider-dot"></span>
+                            <span class="divider-line"></span>
+                            <span class="divider-dot"></span>
+                        </div>
+                        <a href="mailto:vanampallyomprakashreddy@gmail.com" class="email-link">
+                            <span class="email-icon-wrap">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                    <polyline points="22,6 12,13 2,6"/>
+                                </svg>
+                            </span>
+                            <span class="email-text">vanampallyomprakashreddy@gmail.com</span>
+                            <span class="email-arrow">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/>
+                                </svg>
+                            </span>
+                        </a>
+                        <p class="contact-note">Feel free to reach out for collaborations, feedback, or just to say hello!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── FOOTER ── -->
+        <footer class="footer">
+            <div class="section-inner">
+                <div class="footer-inner">
+                    <div class="footer-logo">
+                        <span class="logo-icon">
+                            <svg width="22" height="22" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="2" y="2" width="10" height="10" rx="2" fill="#1E90FF"/>
+                                <rect x="16" y="2" width="10" height="10" rx="2" fill="#F59E0B" opacity="0.85"/>
+                                <rect x="2" y="16" width="10" height="10" rx="2" fill="#10B981" opacity="0.85"/>
+                                <rect x="16" y="16" width="10" height="10" rx="2" fill="#8B5CF6" opacity="0.85"/>
+                            </svg>
+                        </span>
+                        <span class="logo-text">AptitudePlay</span>
+                    </div>
+                    <p class="footer-tagline">Free. Focused. Interview-Ready.</p>
+                    <div class="footer-contact-mini">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <polyline points="22,6 12,13 2,6"/>
+                        </svg>
+                        <a href="mailto:vanampallyomprakashreddy@gmail.com">vanampallyomprakashreddy@gmail.com</a>
+                    </div>
+                    <p class="footer-copy">© 2025 AptitudePlay. Built for learners, by learners.</p>
+                </div>
+            </div>
+        </footer>
+
+    </div><!-- /landing -->
+
+    <!-- ═══════════════════════════════════════
+         GAME VIEW
+    ═══════════════════════════════════════ -->
+    <div id="game-view" class="hidden">
+        <div id="top-bar">
+            <button id="back-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+                </svg>
+                Back
+            </button>
+            <span id="game-title"></span>
+            <div class="top-bar-spacer"></div>
+        </div>
+        <div id="frame-wrapper">
+            <iframe id="game-frame" allowfullscreen></iframe>
+            <div id="error-overlay" class="hidden">
+                <div id="error-box">
+                    <div class="error-icon">⚠️</div>
+                    <h2>Could not load game</h2>
+                    <p>Make sure you're running this via a local server (e.g. VS Code Live Server), not by opening the file directly.</p>
+                    <button id="error-back-btn">← Back to Menu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+    /* ── SCROLL ANIMATIONS ── */
+    const aosCandidates = document.querySelectorAll('[data-aos]');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const el = entry.target;
+                const delay = el.dataset.aosDelay || 0;
+                setTimeout(() => el.classList.add('aos-animate'), parseInt(delay));
+                observer.unobserve(el);
+            }
+        });
+    }, { threshold: 0.12 });
+    aosCandidates.forEach(el => observer.observe(el));
+
+    /* ── NAVBAR SCROLL ── */
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        navbar.classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    /* ── THEME TOGGLE ── */
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+    const saved = localStorage.getItem('aptTheme') || 'light';
+    html.setAttribute('data-theme', saved);
+    themeToggle.addEventListener('click', () => {
+        const current = html.getAttribute('data-theme');
+        const next = current === 'light' ? 'dark' : 'light';
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('aptTheme', next);
+    });
+
+    /* ── MOBILE MENU ── */
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('open');
+        mobileMenuBtn.classList.toggle('active');
+    });
+    document.querySelectorAll('.mobile-link, .mobile-cta').forEach(link => {
+        link.addEventListener('click', () => {
+            mobileMenu.classList.remove('open');
+            mobileMenuBtn.classList.remove('active');
+        });
+    });
+
+    /* ── GAME CARD CLICKS ── */
+    document.querySelectorAll('.game-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const gameKey = card.dataset.game;
+            if (gameKey && typeof loadGame === 'function') {
+                loadGame(gameKey);
+            }
+        });
+    });
+
+    /* ── SMOOTH SCROLL ── */
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+
+    /* ── CONTACT NAV ── */
+    const contactNavLink = document.querySelector('.contact-nav-link');
+    if (contactNavLink) {
+        contactNavLink.addEventListener('click', function(e) {
+            const contactSection = document.querySelector('#contact');
+            if (contactSection) {
+                e.preventDefault();
+                contactSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                contactSection.classList.add('contact-highlight');
+                setTimeout(() => contactSection.classList.remove('contact-highlight'), 2000);
+            }
+        });
+    }
+
+    /* ── EMAIL COPY ── */
+    const emailLink = document.querySelector('.email-link');
+    if (emailLink) {
+        emailLink.addEventListener('click', function() {
+            navigator.clipboard.writeText('vanampallyomprakashreddy@gmail.com').then(() => {
+                const toast = document.createElement('div');
+                toast.className = 'copy-toast';
+                toast.textContent = 'Email copied to clipboard!';
+                document.body.appendChild(toast);
+                setTimeout(() => toast.classList.add('show'), 10);
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 300);
+                }, 2000);
+            }).catch(() => {});
+        });
+    }
+
+
+    /* ════════════════════════════════════════════════════
+       PENTAGON TRAIT WHEEL — Logic
+       ════════════════════════════════════════════════════
+       Strategy:
+         • 5 nodes sit at equal angles (72° apart) on a fixed-radius ring.
+         • The ROTOR element rotates so the active node always ends up at
+           the top (–90° from the circle's 0° = 3-o'clock).
+         • Each node's inner label is counter-rotated by the same amount
+           so text stays upright at all times.
+         • Auto-advances clockwise every AUTO_MS ms.
+         • Clicking a node or a dot selects it immediately.
+    ════════════════════════════════════════════════════ */
+    (function () {
+        const TRAITS     = ['speed', 'adaptability', 'cognitive', 'precision', 'judgement'];
+        const N          = TRAITS.length;
+        const STEP_DEG   = 360 / N;          // 72°
+        const RADIUS     = 170;              // px — ring radius in the 420×420 container
+        const CENTER     = 210;              // px — half of 420
+        const NODE_SIZE  = 82;              // px — matches CSS
+        const AUTO_MS    = 3000;            // ms between auto-advances
+
+        const rotor      = document.getElementById('trait-wheel-rotor');
+        const nodes      = Array.from(rotor.querySelectorAll('.tw-node'));
+        const dotBtns    = Array.from(document.querySelectorAll('#twDots .tw-dot-btn'));
+
+        // Trait info card elements
+        const traitCard    = document.getElementById('traitCard');
+        const traitIcon    = document.getElementById('traitIcon');
+        const traitName    = document.getElementById('traitName');
+        const traitTagline = document.getElementById('traitTagline');
+        const traitPoints  = document.getElementById('traitPoints');
+
+        /* ── Trait content data ── */
+        const TRAIT_DATA = {
+            speed: {
+                name: 'Processing Speed',
+                tagline: 'How quickly you perceive, process, and respond to information under timed conditions.',
+                points: [
+                    'Measured by reaction time across hundreds of micro-decisions',
+                    'Employers look for consistent speed — not just peak performance',
+                    'Practice accelerates your baseline response time measurably',
+                ],
+                iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>`,
+            },
+            adaptability: {
+                name: 'Adaptability',
+                tagline: 'Your ability to shift strategies fluidly when rules, patterns, or contexts change mid-task.',
+                points: [
+                    'Game-based tests switch rules deliberately — adaptability is the core signal',
+                    'Rigid thinkers plateau; flexible thinkers keep improving under pressure',
+                    'Linked to executive function and real-world problem-solving success',
+                ],
+                iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>`,
+            },
+            cognitive: {
+                name: 'Cognitive Skills',
+                tagline: 'The breadth of your mental toolkit — working memory, pattern recognition, logical reasoning.',
+                points: [
+                    'Assessments test simultaneous use of multiple cognitive systems',
+                    'Strong working memory directly predicts higher game scores',
+                    'Regular practice builds transferable cognitive capacity over time',
+                ],
+                iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="12" r="10"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+            },
+            precision: {
+                name: 'Precision',
+                tagline: 'The accuracy of your decisions — doing things right, not just doing them fast.',
+                points: [
+                    'Speed without precision is penalised in most game-based assessments',
+                    'Error rates reveal impulsivity and attention lapses employers track',
+                    'High precision under time pressure is a rare and valued signal',
+                ],
+                iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg>`,
+            },
+            judgement: {
+                name: 'Judgement',
+                tagline: 'Making the right call with incomplete information and limited time.',
+                points: [
+                    'Tests surface decision quality through structured ambiguous scenarios',
+                    'Good judgement means knowing when to act and when to re-evaluate',
+                    'Practice sharpens your intuition for high-stakes snap decisions',
+                ],
+                iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+            },
+        };
+
+        /* ── State ── */
+        // activeIndex: which node is currently at the "top" (selected)
+        // rotorAngle:  current cumulative rotation of the rotor (degrees, always grows CW)
+        let activeIndex  = 0;
+        let rotorAngle   = 0;   // starts at 0; node[0] is at top initially
+        let autoTimer    = null;
+        let isTransiting = false;
+
+        /* ── Place nodes on the ring (one-time setup) ── */
+        // Node i starts at angle: startAngle(i) = i * STEP_DEG - 90
+        // (–90 puts index-0 at the top of the circle)
+        function getNodeStartAngle(i) {
+            return i * STEP_DEG - 90;   // degrees
+        }
+
+        function positionNodes() {
+            nodes.forEach((node, i) => {
+                const angleDeg = getNodeStartAngle(i);
+                const angleRad = angleDeg * Math.PI / 180;
+                const x = CENTER + RADIUS * Math.cos(angleRad) - NODE_SIZE / 2;
+                const y = CENTER + RADIUS * Math.sin(angleRad) - NODE_SIZE / 2;
+                node.style.left = x + 'px';
+                node.style.top  = y + 'px';
+                node.style.width  = NODE_SIZE + 'px';
+                node.style.height = NODE_SIZE + 'px';
+            });
+        }
+
+        /* ── Apply rotor rotation & counter-rotate labels ── */
+        function applyRotation(angleDeg, instant) {
+            if (instant) {
+                rotor.style.transition = 'none';
+                nodes.forEach(n => n.querySelector('.tw-node-inner').style.transition = 'none');
+            } else {
+                rotor.style.transition = 'transform 0.72s cubic-bezier(0.65, 0, 0.35, 1)';
+                nodes.forEach(n => {
+                    n.querySelector('.tw-node-inner').style.transition =
+                        'transform 0.72s cubic-bezier(0.65, 0, 0.35, 1)';
+                });
+            }
+            rotor.style.transform = `rotate(${angleDeg}deg)`;
+            // Counter-rotate each label
+            nodes.forEach(n => {
+                n.querySelector('.tw-node-inner').style.transform = `rotate(${-angleDeg}deg)`;
+            });
+        }
+
+        /* ── Select a trait by index ── */
+        function selectTrait(targetIndex, userInitiated) {
+            if (targetIndex === activeIndex && !userInitiated) return;
+
+            // Calculate shortest clockwise rotation to bring targetIndex to top.
+            // The active node needs to be at top, which means the rotor rotates
+            // so that node[i]'s natural angle (i*72-90) maps to -90.
+            // Required rotor angle = -(i * STEP_DEG)
+            // But we track cumulative angle to avoid jumps. We always go CW.
+
+            const targetNaturalAngle = targetIndex * STEP_DEG; // 0,72,144,216,288
+            // How far CW to rotate from current position:
+            // current target from rotor perspective:
+            const currentTarget = activeIndex * STEP_DEG;
+            let delta = targetNaturalAngle - currentTarget;
+            // Ensure CW (positive)
+            if (userInitiated) {
+                // Go shortest path on user click (can be CW or CCW)
+                if (delta > 180)  delta -= 360;
+                if (delta < -180) delta += 360;
+            } else {
+                // Auto: always go CW
+                if (delta <= 0) delta += 360;
+            }
+
+            rotorAngle += delta;
+            activeIndex = targetIndex;
+
+            applyRotation(-rotorAngle, false);
+            updateUI();
+        }
+
+        /* ── Update visual state (active class, dots, info card) ── */
+        function updateUI() {
+            const trait = TRAITS[activeIndex];
+
+            // Node active states
+            nodes.forEach((n, i) => {
+                n.classList.toggle('tw-active', i === activeIndex);
+            });
+
+            // Dot active states
+            dotBtns.forEach((d, i) => {
+                d.classList.toggle('active', i === activeIndex);
+            });
+
+            // Pointer colour (match active trait)
+            const pointerColors = {
+                speed: 'rgba(30,144,255,0.65)',
+                adaptability: 'rgba(245,158,11,0.65)',
+                cognitive: 'rgba(16,185,129,0.65)',
+                precision: 'rgba(139,92,246,0.65)',
+                judgement: 'rgba(239,68,68,0.60)',
+            };
+            const ptr = document.getElementById('twPointer');
+            if (ptr) ptr.style.borderTopColor = pointerColors[trait] || 'rgba(30,144,255,0.55)';
+
+            // Info card
+            showTrait(trait);
+        }
+
+        function showTrait(trait) {
+            const data = TRAIT_DATA[trait];
+            if (!data) return;
+
+            traitCard.setAttribute('data-trait', trait);
+            traitIcon.innerHTML = data.iconSvg;
+            traitName.textContent = data.name;
+            traitTagline.textContent = data.tagline;
+            traitPoints.innerHTML = data.points.map(p => `<li>${p}</li>`).join('');
+
+            traitCard.classList.remove('hidden');
+            requestAnimationFrame(() => traitCard.classList.add('visible'));
+        }
+
+        /* ── Auto-advance clockwise ── */
+        function startAuto() {
+            stopAuto();
+            autoTimer = setInterval(() => {
+                const next = (activeIndex + 1) % N;
+                selectTrait(next, false);
+            }, AUTO_MS);
+        }
+
+        function stopAuto() {
+            if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
+        }
+
+        /* ── Node click handlers ── */
+        nodes.forEach((node, i) => {
+            node.addEventListener('click', (e) => {
+                e.stopPropagation();
+                stopAuto();
+                selectTrait(i, true);
+                // Restart auto after a pause
+                setTimeout(startAuto, AUTO_MS * 2);
+            });
+        });
+
+        /* ── Dot click handlers ── */
+        dotBtns.forEach((dot, i) => {
+            dot.addEventListener('click', () => {
+                stopAuto();
+                selectTrait(i, true);
+                setTimeout(startAuto, AUTO_MS * 2);
+            });
+        });
+
+        /* ── Init ── */
+        positionNodes();
+        applyRotation(0, true);  // No animation on init
+        updateUI();
+        // Small delay before starting auto so page load doesn't feel jarring
+        setTimeout(startAuto, 1200);
+
+    })();
+    </script>
+</body>
+</html>

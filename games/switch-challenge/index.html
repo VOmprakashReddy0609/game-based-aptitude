@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Switch Challenge — Symbol Sequencing</title>
+<link rel="stylesheet" href="styles/style.css">
+<link rel="stylesheet" href="styles/darkMode.css">
+<style>
+  /* ── "Created by" strip inside the start card ── */
+  #start-creator {
+    background: #f4f7fd;
+    border-bottom: 1px solid #dde6f5;
+    padding: 8px 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11.5px;
+    color: #4a5c7a;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  #start-creator .creator-name {
+    font-weight: 700;
+    color: #1a56a0;
+    letter-spacing: 0.2px;
+  }
+
+  /* ── Page Footer ── */
+  #page-footer {
+    width: 100%;
+    background: #0d2a52;
+    color: #a0b8d8;
+    text-align: center;
+    padding: 18px 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12.5px;
+    line-height: 1.8;
+    letter-spacing: 0.2px;
+    border-top: 3px solid #1a56a0;
+    box-sizing: border-box;
+  }
+  #page-footer .footer-dev-label {
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #5a85b8;
+    margin-bottom: 4px;
+  }
+  #page-footer .footer-dev-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #e0ecff;
+    letter-spacing: 0.4px;
+  }
+  #page-footer .footer-dev-email a {
+    color: #5fa8e8;
+    text-decoration: none;
+    font-size: 12.5px;
+    transition: color 0.15s;
+  }
+  #page-footer .footer-dev-email a:hover {
+    color: #90c8ff;
+    text-decoration: underline;
+  }
+  #page-footer .footer-divider {
+    display: inline-block;
+    width: 40px;
+    height: 1px;
+    background: #2a4a78;
+    margin: 8px auto;
+    vertical-align: middle;
+  }
+  #page-footer .footer-product {
+    font-size: 11.5px;
+    color: #6080a8;
+  }
+
+  /* ── Dark-mode overrides ── */
+  [data-theme="dark"] #start-creator {
+    background: #182535;
+    border-color: #253a56;
+    color: #7a9ac0;
+  }
+  [data-theme="dark"] #start-creator .creator-name {
+    color: #5fa0e8;
+  }
+  [data-theme="dark"] #page-footer {
+    background: #0a1a30;
+    border-color: #1a3a6a;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Start Screen ── -->
+<div id="start-overlay">
+  <div id="start-box">
+
+    <div id="start-header">
+      <div id="start-logo-badge">SCT</div>
+      <div id="start-title">Switch Challenge Trainer</div>
+      <button id="start-theme-toggle" onclick="toggleTheme()" title="Toggle dark / light mode"
+        style="margin-left:auto;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.35);border-radius:4px;padding:4px 9px;font-size:16px;cursor:pointer;color:white;">☀️</button>
+    </div>
+
+    <div id="start-divider"></div>
+
+    <div id="start-subtitle">
+      Symbol Sequencing Assessment &mdash; Read the rules carefully before you begin.
+    </div>
+
+    <!-- ── Developer credit inside the start card ── -->
+    <div id="start-creator">
+      <span>👨‍💻</span>
+      <span>Created by <span class="creator-name">Vanampally Om Prakash Reddy</span></span>
+    </div>
+
+    <div id="start-rules">
+      <div id="start-rules-label">Rules</div>
+
+      <div class="start-rule-row">
+        <div class="rule-num">1</div>
+        <div class="rule-text">A <strong>source sequence</strong> of symbols is shown at the top.</div>
+      </div>
+      <div class="start-rule-row">
+        <div class="rule-num">2</div>
+        <div class="rule-text">A <strong>target sequence</strong> is shown at the bottom — your goal state.</div>
+      </div>
+      <div class="start-rule-row">
+        <div class="rule-num">3</div>
+        <div class="rule-text">Each <strong>operator row</strong> rearranges the sequence. Select one operator per row.</div>
+      </div>
+      <div class="start-rule-row">
+        <div class="rule-num">4</div>
+        <div class="rule-text">Applying your chosen operators in order must <strong>transform source into target</strong>.</div>
+      </div>
+      <div class="start-rule-row">
+        <div class="rule-num">5</div>
+        <div class="rule-text">Correct answer <strong>+1 point</strong>. Difficulty increases as your score climbs.</div>
+      </div>
+    </div>
+
+    <div id="start-hint">
+      <span>💡</span>
+      <span>Trace the position of each symbol step-by-step through the operators to find the correct path.</span>
+    </div>
+
+    <!-- Primary action — label changes to "New Game" when a save exists -->
+    <button id="start-btn" onclick="startGame()">&#9654; Start Assessment</button>
+
+    <!-- Resume button — hidden until a valid in-progress save is detected -->
+    <button id="resume-btn" onclick="resumeSavedGame()" style="display:none;
+      width: calc(100% - 48px); margin: 0 24px 12px; padding: 12px;
+      background: #1a7a3c; color: white; border: none; border-radius: 4px;
+      font-size: 14px; font-weight: 700; font-family: Arial, Helvetica, sans-serif;
+      letter-spacing: 0.5px; cursor: pointer; transition: background 0.15s;">
+      &#9654; Resume Game
+    </button>
+
+  </div>
+</div>
+
+<!-- ── Exam Header ── -->
+<div id="exam-header">
+  <div id="exam-branding">
+    <div id="exam-logo">SCT</div>
+    <div id="exam-name">Switch Challenge Trainer</div>
+  </div>
+</div>
+
+<!-- ── Main Layout ── -->
+<div id="wrapper">
+
+  <!-- Left: Question Panel -->
+  <div id="question-panel">
+
+    <div id="question-header">
+      <div id="qnum-badge">Q <span id="q-number">1</span></div>
+      <div id="question-title">Select the Correct Operators</div>
+    </div>
+
+    <div id="question-text">
+      Apply one operator from <strong>each row</strong> in sequence to transform the
+      <span class="hl">SOURCE</span> into the <span class="hl">TARGET</span> arrangement shown below.
+    </div>
+
+    <!-- Status Strip -->
+    <div id="status-strip">
+      <div class="status-item">
+        <span class="status-label">Score</span>
+        <span class="status-val" id="score">0</span>
+      </div>
+      <div class="status-divider"></div>
+      <div class="status-item">
+        <span class="status-label">Correct</span>
+        <span class="status-val green" id="correct">0</span>
+      </div>
+      <div class="status-divider"></div>
+      <div class="status-item">
+        <span class="status-label">Wrong</span>
+        <span class="status-val red" id="wrong">0</span>
+      </div>
+      <div class="status-divider"></div>
+      <div class="status-item">
+        <span class="status-label">Attempted</span>
+        <span class="status-val" id="attempted">0</span>
+      </div>
+    </div>
+
+    <!-- Puzzle Area -->
+    <div id="puzzle-area">
+
+      <!-- Source Pattern -->
+      <div class="pattern-section">
+        <div class="symbol-row" id="topPattern"></div>
+      </div>
+
+      <!-- Transform Section -->
+      <div id="transform-area">
+        <div id="operatorRows"></div>
+      </div>
+
+      <!-- Target Pattern -->
+      <div class="pattern-section" style="margin-bottom: 20px;">
+        <div class="symbol-row" id="bottomPattern"></div>
+      </div>
+
+    </div>
+
+    <!-- Feedback / Hint Bar -->
+    <div id="hint-bar">
+      <span class="feedback-icon">💡</span>
+      <span id="hint-text">Select one operator from each row. Your selections are applied in order from top to bottom.</span>
+    </div>
+
+  </div>
+
+  <!-- Right: Side Panel -->
+  <div id="side-panel">
+
+    <div id="timer-card">
+      <div id="timer-label">TIME REMAINING</div>
+      <div id="timer-display">
+        <span id="timer-min">05</span><span id="timer-colon">:</span><span id="timer-sec">00</span>
+      </div>
+      <div id="timer-bar-bg">
+        <div id="timer-bar-fill"></div>
+      </div>
+    </div>
+
+    <div id="progress-card">
+      <div class="side-card-title">SESSION PROGRESS</div>
+      <div id="progress-bar-bg">
+        <div id="progress-bar-fill"></div>
+      </div>
+      <div id="progress-label">
+        <span id="correct-count">0</span> correct of <span id="attempted-count">0</span>
+      </div>
+    </div>
+
+    <div id="level-card">
+      <div class="side-card-title">DIFFICULTY</div>
+      <div id="level-display"><span id="level-num">1</span></div>
+      <div id="level-bar-bg"><div id="level-bar-fill"></div></div>
+    </div>
+
+    <div id="instructions-card">
+      <div class="side-card-title">HOW TO SOLVE</div>
+      <ol id="how-to">
+        <li>Read the <strong>source</strong> symbols top-left to right.</li>
+        <li>Each operator is a <strong>position map</strong> — digit N means "take symbol at position N".</li>
+        <li>Pick one operator per row, applied top to bottom.</li>
+        <li>Your chain must produce the <strong>target</strong> sequence.</li>
+        <li>Trace one symbol at a time to verify.</li>
+      </ol>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ── End Screen Modal ── -->
+<div id="modal-overlay" class="hidden">
+  <div id="modal-box">
+    <div id="modal-header">
+      <div id="modal-logo">SCT</div>
+      <div id="modal-title">Assessment Complete</div>
+    </div>
+    <div id="modal-divider"></div>
+    <div id="result-grid">
+      <div class="result-row">
+        <span class="result-label">Final Score</span>
+        <span class="result-val accent" id="res-score">0</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">Difficulty Reached</span>
+        <span class="result-val" id="res-level">1</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">Total Attempted</span>
+        <span class="result-val" id="res-attempts">0</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">Correct Answers</span>
+        <span class="result-val green" id="res-correct">0</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">Wrong Answers</span>
+        <span class="result-val red" id="res-wrong">0</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">Accuracy</span>
+        <span class="result-val" id="res-accuracy">—</span>
+      </div>
+    </div>
+    <div id="modal-divider2"></div>
+    <div id="accuracy-wrap">
+      <div id="acc-label-row"><span>Accuracy</span><span id="acc-pct">0%</span></div>
+      <div id="acc-bar-bg"><div id="acc-bar-fill"></div></div>
+    </div>
+    <button id="restart-btn" onclick="restartGame()">&#8634; Restart Assessment</button>
+  </div>
+</div>
+
+<script src="js/puzzleGenerator.js"></script>
+<script src="js/uiRenderer.js"></script>
+<script src="js/game.js"></script>
+
+<!-- Floating theme toggle shown after the overlay closes -->
+<button id="theme-toggle" onclick="toggleTheme()" title="Toggle dark / light mode">☀️</button>
+
+<script>
+  /* ── Theme helpers ── */
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    const icon = theme === 'dark' ? '🌙' : '☀️';
+    const t1 = document.getElementById('start-theme-toggle');
+    const t2 = document.getElementById('theme-toggle');
+    if (t1) t1.innerText = icon;
+    if (t2) t2.innerText = icon;
+    localStorage.setItem('theme', theme);
+  }
+
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+  }
+
+  /* Apply saved theme immediately on load */
+  (function () {
+    const saved = localStorage.getItem('theme') || 'light';
+    applyTheme(saved);
+  })();
+
+  /* ── Game bootstrap ── */
+  window.addEventListener('DOMContentLoaded', () => {
+    const saved = localStorage.getItem('switchChallenge_state');
+    if (saved) {
+      try {
+        const s = JSON.parse(saved);
+        if (s && s.gameStarted) {
+          const resumeBtn = document.getElementById('resume-btn');
+          const startBtn  = document.getElementById('start-btn');
+          if (resumeBtn) resumeBtn.style.display = 'block';
+          if (startBtn) {
+            startBtn.textContent = '↺ New Game (reset progress)';
+            startBtn.style.background = '#6b7280';
+          }
+        }
+      } catch (e) { /* malformed save — ignore */ }
+    }
+  });
+
+  function resumeSavedGame() {
+    document.getElementById('start-overlay').classList.add('hidden');
+  }
+
+  function startGame() {
+    try { localStorage.removeItem('switchChallenge_state'); } catch(e) {}
+    document.getElementById('start-overlay').classList.add('hidden');
+    if (typeof initGame === 'function') initGame();
+  }
+</script>
+
+<!-- ── Page Footer ── -->
+<footer id="page-footer">
+  <div class="footer-dev-label">Developed by</div>
+  <div class="footer-dev-name">Vanampally Om Prakash Reddy</div>
+  <div class="footer-dev-email">
+    <a href="mailto:vanampallyomprakashreddy@gmail.com">vanampallyomprakashreddy@gmail.com</a>
+  </div>
+  <div><span class="footer-divider"></span></div>
+  <div class="footer-product">Switch Challenge Trainer &mdash; Symbol Sequencing Assessment</div>
+</footer>
+
+</body>
+</html>

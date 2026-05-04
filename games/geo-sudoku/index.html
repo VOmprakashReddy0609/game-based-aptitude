@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Geo Sudoku Trainer — Symbol Reasoning</title>
+<link rel="stylesheet" href="styles/style.css">
+<link rel="stylesheet" href="styles/darkMode.css">
+<style>
+  /* ── Start Screen Overlay ── */
+  #start-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 20, 50, 0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+  #start-overlay.hidden {
+    display: none;
+  }
+
+  #start-box {
+    background: #ffffff;
+    border-radius: 6px;
+    width: 420px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    animation: modal-in 0.25s ease;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  @keyframes modal-in {
+    from { transform: translateY(30px) scale(0.97); opacity: 0; }
+    to   { transform: translateY(0) scale(1);       opacity: 1; }
+  }
+
+  /* Header — mirrors #modal-header */
+  #start-header {
+    background: #123d7a;
+    color: white;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  #start-logo-badge {
+    background: white;
+    color: #123d7a;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 3px;
+    letter-spacing: 2px;
+  }
+
+  #start-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 0.3px;
+  }
+
+  /* Theme toggle inside the header */
+  #start-theme-toggle {
+    margin-left: auto;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 4px;
+    padding: 4px 9px;
+    font-size: 16px;
+    cursor: pointer;
+    line-height: 1;
+    transition: background 0.15s;
+    flex-shrink: 0;
+  }
+  #start-theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.28);
+  }
+
+  #start-divider {
+    height: 1px;
+    background: #c5cfe0;
+  }
+
+  /* Subtitle strip — mirrors #question-text */
+  #start-subtitle {
+    background: #e8f0fb;
+    border-bottom: 1px solid #c6d8f5;
+    padding: 12px 24px;
+    font-size: 13px;
+    color: #2a3a5c;
+    line-height: 1.6;
+  }
+
+  /* ── "Created by" strip inside the start card ── */
+  #start-creator {
+    background: #f4f7fd;
+    border-bottom: 1px solid #dde6f5;
+    padding: 8px 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11.5px;
+    color: #4a5c7a;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  #start-creator .creator-icon {
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  #start-creator .creator-name {
+    font-weight: 700;
+    color: #1a56a0;
+    letter-spacing: 0.2px;
+  }
+
+  /* Rules block */
+  #start-rules {
+    padding: 20px 24px 8px;
+  }
+
+  #start-rules-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: #555;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  /* Mirrors .result-row pattern */
+  .start-rule-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 9px 0;
+    border-bottom: 1px solid #f0f3f8;
+    font-size: 13px;
+    color: #1a1a2e;
+    line-height: 1.5;
+  }
+
+  .start-rule-row:last-child {
+    border-bottom: none;
+  }
+
+  .rule-num {
+    background: #1a56a0;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    min-width: 22px;
+    height: 22px;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .rule-text strong {
+    color: #1a56a0;
+  }
+
+  /* Warning strip — mirrors #hint-bar */
+  #start-hint {
+    background: #fffbf0;
+    border-top: 1px solid #f0e0b8;
+    padding: 10px 24px;
+    font-size: 12px;
+    color: #7a5800;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  /* Start button — mirrors #restart-btn */
+  #start-btn {
+    display: block;
+    width: calc(100% - 48px);
+    margin: 18px 24px 24px;
+    padding: 12px;
+    background: #1a56a0;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  #start-btn:hover {
+    background: #123d7a;
+  }
+
+  /* ── Dark-mode overrides for the start box ── */
+  [data-theme="dark"] #start-box {
+    background: #1e2a40;
+  }
+  [data-theme="dark"] #start-divider {
+    background: #2e3f5c;
+  }
+  [data-theme="dark"] #start-subtitle {
+    background: #162236;
+    border-color: #2a3f60;
+    color: #a8c0e0;
+  }
+  [data-theme="dark"] #start-creator {
+    background: #182535;
+    border-color: #253a56;
+    color: #7a9ac0;
+  }
+  [data-theme="dark"] #start-creator .creator-name {
+    color: #5fa0e8;
+  }
+  [data-theme="dark"] #start-rules-label {
+    color: #8a9ab8;
+  }
+  [data-theme="dark"] .start-rule-row {
+    border-color: #2a3a55;
+    color: #d0dff5;
+  }
+  [data-theme="dark"] .rule-text strong {
+    color: #5fa0e8;
+  }
+  [data-theme="dark"] #start-hint {
+    background: #2a2010;
+    border-color: #5a4010;
+    color: #c8a84a;
+  }
+  [data-theme="dark"] #start-btn {
+    background: #1a56a0;
+  }
+  [data-theme="dark"] #start-btn:hover {
+    background: #123d7a;
+  }
+
+  /* ── Page Footer ── */
+  #page-footer {
+    width: 100%;
+    background: #0d2a52;
+    color: #a0b8d8;
+    text-align: center;
+    padding: 18px 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12.5px;
+    line-height: 1.8;
+    letter-spacing: 0.2px;
+    border-top: 3px solid #1a56a0;
+    box-sizing: border-box;
+  }
+
+  #page-footer .footer-dev-label {
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #5a85b8;
+    margin-bottom: 4px;
+  }
+
+  #page-footer .footer-dev-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #e0ecff;
+    letter-spacing: 0.4px;
+  }
+
+  #page-footer .footer-dev-email a {
+    color: #5fa8e8;
+    text-decoration: none;
+    font-size: 12.5px;
+    transition: color 0.15s;
+  }
+
+  #page-footer .footer-dev-email a:hover {
+    color: #90c8ff;
+    text-decoration: underline;
+  }
+
+  #page-footer .footer-divider {
+    display: inline-block;
+    width: 40px;
+    height: 1px;
+    background: #2a4a78;
+    margin: 8px auto;
+    vertical-align: middle;
+  }
+
+  #page-footer .footer-product {
+    font-size: 11.5px;
+    color: #6080a8;
+  }
+
+  [data-theme="dark"] #page-footer {
+    background: #0a1a30;
+    border-color: #1a3a6a;
+  }
+</style>
+</head>
+
+<body>
+
+<!-- ── Start Screen ── -->
+<div id="start-overlay">
+  <div id="start-box">
+
+    <div id="start-header">
+      <div id="start-logo-badge">GST</div>
+      <div id="start-title">Geo Sudoku Trainer</div>
+      <!-- Theme toggle lives here so it's always above the overlay -->
+      <button id="start-theme-toggle" onclick="toggleTheme()" title="Toggle dark / light mode">☀️</button>
+    </div>
+
+    <div id="start-divider"></div>
+
+    <div id="start-subtitle">
+      Symbol Reasoning Assessment &mdash; Read the rules carefully before you begin.
+    </div>
+
+    <!-- ── Developer credit inside the start card ── -->
+    <div id="start-creator">
+      <span class="creator-icon">👨‍💻</span>
+      <span>Created by <span class="creator-name">Vanampally Om Prakash Reddy</span></span>
+    </div>
+
+    <div id="start-rules">
+      <div id="start-rules-label">Rules</div>
+
+      <div class="start-rule-row">
+        <div class="rule-num">1</div>
+        <div class="rule-text">Each <strong>row</strong> must contain every symbol exactly once.</div>
+      </div>
+      <div class="start-rule-row">
+        <div class="rule-num">2</div>
+        <div class="rule-text">Each <strong>column</strong> must contain every symbol exactly once.</div>
+      </div>
+      <div class="start-rule-row">
+        <div class="rule-num">3</div>
+        <div class="rule-text">Click a <strong>?</strong> cell to select it, then pick the correct symbol from the options.</div>
+      </div>
+      <div class="start-rule-row">
+        <div class="rule-num">4</div>
+        <div class="rule-text">Wrong answers <strong>deduct 1 point</strong> — think before you click!</div>
+      </div>
+    </div>
+
+    <div id="start-hint">
+      <span>💡</span>
+      <span>Use row and column elimination to narrow down the correct symbol for each <strong>?</strong> cell.</span>
+    </div>
+
+    <button id="start-btn" onclick="startGame()">&#9654; Start Assessment</button>
+    <button id="resume-btn" onclick="resumeSavedGame()" style="display:none;
+      width: calc(100% - 48px); margin: 0 24px 12px; padding: 12px;
+      background: #1a7a3c; color: white; border: none; border-radius: 4px;
+      font-size: 14px; font-weight: 700; font-family: Arial, Helvetica, sans-serif;
+      letter-spacing: 0.5px; cursor: pointer; transition: background 0.15s;">
+      &#9654; Resume Game
+    </button>
+
+  </div>
+</div>
+
+<!-- Main Content -->
+<div id="wrapper">
+
+  <!-- Left Panel: Question Area -->
+  <div id="question-panel">
+
+    <div id="question-header">
+      <div id="qnum-badge">Q <span id="level">1</span> </div>
+      <div id="question-title">Complete the Symbol Grid</div>
+    </div>
+
+    <div id="question-text">
+      Each row and each column must contain each symbol <strong>exactly once</strong>.
+      Select a <span class="hl">?</span> cell, then choose the correct symbol from the options below.
+    </div>
+
+    <!-- Status strip -->
+    <div id="status-strip">
+      <div class="status-item">
+        <span class="status-label">Score</span>
+        <span class="status-val" id="score">0</span>
+      </div>
+      <div class="status-divider"></div>
+      <div class="status-item">
+        <span class="status-label">Correct</span>
+        <span class="status-val green" id="correct">0</span>
+      </div>
+      <div class="status-divider"></div>
+      <div class="status-item">
+        <span class="status-label">Wrong</span>
+        <span class="status-val red" id="wrong">0</span>
+      </div>
+      <div class="status-divider"></div>
+      <div class="status-item">
+        <span class="status-label">Attempts</span>
+        <span class="status-val" id="attempts">0</span>
+      </div>
+    </div>
+
+    <!-- The Grid -->
+    <div id="board-area">
+      <div id="board"></div>
+    </div>
+
+    <!-- Symbol Options -->
+    <div id="options-label">&#9660; SELECT SYMBOL</div>
+    <div id="options"></div>
+
+    <!-- Instruction footer -->
+    <div id="hint-bar">
+      <span>💡</span>
+      <span id="hint-text">Click on any <strong>?</strong> cell to select it, then pick the correct symbol from the choices above.</span>
+    </div>
+
+  </div>
+
+  <!-- Right Panel: Timer + Progress -->
+  <div id="side-panel">
+
+    <div id="timer-card">
+      <div id="timer-label">TIME REMAINING</div>
+      <div id="timer-display">
+        <span id="timer-min">04</span><span id="timer-colon">:</span><span id="timer-sec">00</span>
+      </div>
+      <div id="timer-bar-bg">
+        <div id="timer-bar-fill"></div>
+      </div>
+    </div>
+
+    <div id="progress-card">
+      <div class="side-card-title">PROGRESS</div>
+      <div id="progress-bar-bg">
+        <div id="progress-bar-fill"></div>
+      </div>
+      <div id="progress-label"><span id="filled-count">0</span> / <span id="total-count">9</span> filled</div>
+    </div>
+
+    <div id="level-card">
+      <div class="side-card-title">LEVEL</div>
+      <div id="level-display"><span id="level2">1</span></div>
+      <div id="level-bar-bg"><div id="level-bar-fill"></div></div>
+    </div>
+
+    <div id="instructions-card">
+      <div class="side-card-title">HOW TO SOLVE</div>
+      <ol id="how-to">
+        <li>Each row must have all symbols exactly once.</li>
+        <li>Each column must have all symbols exactly once.</li>
+        <li>Click a <strong>?</strong> to activate the cell.</li>
+        <li>Press the correct symbol to fill it in.</li>
+        <li>Wrong answers deduct 1 point.</li>
+      </ol>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- End Screen Modal -->
+<div id="modal-overlay" class="hidden">
+  <div id="modal-box">
+    <div id="modal-header">
+      <div id="modal-title">Assessment Complete</div>
+    </div>
+    <div id="modal-divider"></div>
+    <div id="result-grid">
+      <div class="result-row">
+        <span class="result-label">Final Score</span>
+        <span class="result-val accent" id="res-score">0</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">Level Reached</span>
+        <span class="result-val" id="res-level">1</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">Total Attempts</span>
+        <span class="result-val" id="res-attempts">0</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">Correct Answers</span>
+        <span class="result-val green" id="res-correct">0</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">Wrong Answers</span>
+        <span class="result-val red" id="res-wrong">0</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">Accuracy</span>
+        <span class="result-val" id="res-accuracy">—</span>
+      </div>
+    </div>
+    <div id="modal-divider2"></div>
+    <div id="accuracy-wrap">
+      <div id="acc-label-row"><span>Accuracy</span><span id="acc-pct">0%</span></div>
+      <div id="acc-bar-bg"><div id="acc-bar-fill"></div></div>
+    </div>
+    <button id="restart-btn" onclick="restartGame()">&#8634; Restart Assessment</button>
+  </div>
+</div>
+
+<script src="js/regions.js"></script>
+<script src="js/validator.js"></script>
+<script src="js/solver.js"></script>
+<script src="js/generator.js"></script>
+<script src="js/board.js"></script>
+<script src="js/game.js"></script>
+
+<script>
+  /* ── Theme helpers ── */
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    const icon = theme === 'dark' ? '🌙' : '☀️';
+    // Keep both toggle buttons in sync
+    const t1 = document.getElementById('start-theme-toggle');
+    const t2 = document.getElementById('theme-toggle');
+    if (t1) t1.innerText = icon;
+    if (t2) t2.innerText = icon;
+    localStorage.setItem('theme', theme);
+  }
+
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+  }
+
+  /* Apply saved theme immediately on load */
+  (function () {
+    const saved = localStorage.getItem('theme') || 'light';
+    applyTheme(saved);
+  })();
+
+  /* ── Game bootstrap ── */
+  window.addEventListener('DOMContentLoaded', () => {
+    // Check for a saved in-progress session and update the start overlay buttons
+    const saved = localStorage.getItem('geoSudoku_state');
+    if (saved) {
+      try {
+        const s = JSON.parse(saved);
+        if (s && s.gameStarted) {
+          // Offer Resume as the primary action
+          const resumeBtn = document.getElementById('resume-btn');
+          const startBtn  = document.getElementById('start-btn');
+          if (resumeBtn) resumeBtn.style.display = 'block';
+          if (startBtn)  {
+            startBtn.textContent = '↺ New Game (reset progress)';
+            startBtn.style.background = '#6b7280';
+          }
+        }
+      } catch (e) { /* malformed save — ignore */ }
+    }
+  });
+
+  // Resume the existing saved session (skips the start overlay logic in game.js
+  // since window.onload already handles it; we just dismiss the overlay here).
+  function resumeSavedGame() {
+    document.getElementById('start-overlay').classList.add('hidden');
+    // game.js window.onload has already restored state and started the timer
+    // when it detected gameStarted=true, so nothing more to do here.
+  }
+
+  function startGame() {
+    // New game — clear any existing save first
+    try { localStorage.removeItem('geoSudoku_state'); } catch(e) {}
+    document.getElementById('start-overlay').classList.add('hidden');
+    if (typeof initGame === 'function') initGame();
+  }
+</script>
+
+<!-- Floating toggle shown after the overlay closes -->
+<button id="theme-toggle" onclick="toggleTheme()" title="Toggle dark / light mode">☀️</button>
+
+<!-- ── Page Footer ── -->
+<footer id="page-footer">
+  <div class="footer-dev-label">Developed by</div>
+  <div class="footer-dev-name">Vanampally Om Prakash Reddy</div>
+  <div class="footer-dev-email">
+    <a href="mailto:vanampallyomprakashreddy@gmail.com">vanampallyomprakashreddy@gmail.com</a>
+  </div>
+  <div><span class="footer-divider"></span></div>
+  <div class="footer-product">Geo Sudoku Trainer &mdash; Symbol Reasoning Assessment</div>
+</footer>
+
+</body>
+</html>
