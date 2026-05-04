@@ -1,53 +1,30 @@
-# Switch Challenge Trainer
-
-A browser‑based symbol sequencing puzzle used for game‑based aptitude assessments. Players transform a source sequence into a target sequence by selecting one operator per row. Difficulty increases as correct answers accumulate.
-
-## 🎯 Features
-
-- Dynamic puzzles with operator rows and symbol sequences
-- Timer, score tracking, and progress visualization
-- Rules and hints built into UI
-- Responsive layout for desktop use
-
-## 📁 Project Structure
-
-```
-index.html               # main entry point
-styles/
-  └── style.css          # stylesheet for layout and visuals
-js/
-  ├── game.js            # primary game logic and state management
-  ├── puzzleGenerator.js # creates new source/target/operator sets
-  ├── timer.js           # countdown and timeout handling
-  ├── uiRenderer.js      # DOM updates and rendering helpers
-  ├── validator.js       # checks player answers and updates score
-  └── operator.js        # utility for parsing operator definitions
-
-```
-
-## 🚀 Getting Started
-
-1. **Clone or download** the repository to your local machine.
-2. Open `index.html` in a modern web browser (Chrome/Firefox/Edge).
-3. Read the rules, then click **Start Assessment** to begin.
-
-> ℹ️ No build tools or server required – it's a static HTML/JS/CSS project.
-
-## 🛠️ Development
-
-- Edit JavaScript files in `js/` to modify game behavior.
-- Add new styles in `styles/style.css`.
-- You can serve the folder with a simple HTTP server (e.g., `npx http-server`) if desired.
-
-## 📝 Contributing
-
-Feel free to fork the project and submit pull requests for:
-
-- Additional puzzle types
-- Performance improvements
-- Mobile responsiveness
-
-
----
-
-*Switch Challenge Trainer* was created as part of a game‑based aptitude project. Enjoy solving the symbol puzzles!
+Switch Challenge Trainer
+Overview
+Switch Challenge is a browser-based symbol sequencing puzzle designed to simulate cognitive flexibility assessments used in hiring processes. The player must transform an initial sequence into a target sequence by applying one valid operator per step. Difficulty increases progressively as performance improves.
+Core Functionality
+The game generates dynamic puzzles consisting of a source sequence, a target sequence, and a set of operator rules. Each move requires selecting the correct operator to transform the sequence closer to the target state. Accuracy and speed determine progression.
+Features
+Dynamic puzzle generation with operator-based transformations
+Timer-driven gameplay with scoring and progression tracking
+Integrated rule display and contextual hints
+Structured UI for clear interaction and feedback
+Responsive layout optimized for desktop environments
+Project Structure
+The application is organized into a single HTML entry point, a styles directory for layout and design, and a JavaScript directory containing modular components for game logic, puzzle generation, validation, UI rendering, and timing control.
+Execution
+No build tools are required. The project runs as a static application.
+Steps:
+Open the index.html file in a modern browser such as Chrome, Edge, or Firefox
+Optional:
+Serve using a lightweight HTTP server if required for local testing environments
+Development
+Modify game behavior through JavaScript modules in the js directory
+Update styling through styles/style.css
+Extend logic by adding new operator rules or puzzle generation strategies
+Future Extensions
+Additional puzzle variations with more complex transformation rules
+Performance optimizations in puzzle generation
+Enhanced responsiveness for mobile devices
+Advanced analytics for tracking player performance
+Context
+The project is part of a broader system focused on preparing users for game-based aptitude assessments by training pattern recognition, logical sequencing, and rapid decision-making under constraints
