@@ -39,11 +39,7 @@ function loadGame(gameKey) {
 
 /* Back to landing */
 function goBack() {
-    gameFrame.src = "";
-    errorOverlay.classList.add("hidden");
-    gameView.classList.add("hidden");
-    landing.classList.remove("hidden");
-    history.pushState({}, "", location.pathname);
+    window.location.href = 'index.html';
 }
 
 /* Detect iframe load failure */
