@@ -4,117 +4,63 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta author="Om Prakash Reddy Vanampally">
-  <meta keywords="spatial reasoning, aptitude test, game-based assessment, motion challenge, puzzle game, cognitive skills">
-  <title>Motion Challenge — Spatial Reasoning Assessment</title>
+  <meta name="author" content="Om Prakash Reddy Vanampally">
+  <meta name="keywords" content="spatial reasoning, aptitude test, game-based assessment, motion challenge, puzzle game, cognitive skills">
+  <title>Motion Challenge — Spatial Reasoning · AptitudePlay</title>
+
+  <!-- Fonts matching landing page -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/board.css">
   <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/darkMode.css">
-  <style>
-    /* ── "Created by" strip inside the start card ── */
-    #start-creator {
-      background: #f4f7fd;
-      border-bottom: 1px solid #dde6f5;
-      padding: 8px 24px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 11.5px;
-      color: #4a5c7a;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-    #start-creator .creator-name {
-      font-weight: 700;
-      color: #1a56a0;
-      letter-spacing: 0.2px;
-    }
-
-    /* ── Page Footer ── */
-    #page-footer {
-      width: 100%;
-      background: #0d2a52;
-      color: #a0b8d8;
-      text-align: center;
-      padding: 18px 24px;
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 12.5px;
-      line-height: 1.8;
-      letter-spacing: 0.2px;
-      border-top: 3px solid #1a56a0;
-      box-sizing: border-box;
-    }
-    #page-footer .footer-dev-label {
-      font-size: 10px;
-      letter-spacing: 2.5px;
-      text-transform: uppercase;
-      color: #5a85b8;
-      margin-bottom: 4px;
-    }
-    #page-footer .footer-dev-name {
-      font-size: 14px;
-      font-weight: 700;
-      color: #e0ecff;
-      letter-spacing: 0.4px;
-    }
-    #page-footer .footer-dev-email a {
-      color: #5fa8e8;
-      text-decoration: none;
-      font-size: 12.5px;
-      transition: color 0.15s;
-    }
-    #page-footer .footer-dev-email a:hover {
-      color: #90c8ff;
-      text-decoration: underline;
-    }
-    #page-footer .footer-divider {
-      display: inline-block;
-      width: 40px;
-      height: 1px;
-      background: #2a4a78;
-      margin: 8px auto;
-      vertical-align: middle;
-    }
-    #page-footer .footer-product {
-      font-size: 11.5px;
-      color: #6080a8;
-    }
-
-    /* ── Dark-mode overrides ── */
-    [data-theme="dark"] #start-creator {
-      background: #182535;
-      border-color: #253a56;
-      color: #7a9ac0;
-    }
-    [data-theme="dark"] #start-creator .creator-name {
-      color: #5fa0e8;
-    }
-    [data-theme="dark"] #page-footer {
-      background: #0a1a30;
-      border-color: #1a3a6a;
-    }
-  </style>
 </head>
 
 <body>
 
-<!-- ── Exam Header ── -->
+<!-- ══════════════════════════════════════════
+     EXAM HEADER — landing nav aesthetic
+══════════════════════════════════════════ -->
 <div id="exam-header">
   <div id="exam-branding">
+    <!-- AptitudePlay logo mark -->
+    <span style="display:flex;align-items:center;margin-right:6px;">
+      <svg width="24" height="24" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="2" width="10" height="10" rx="2" fill="#1E90FF"/>
+        <rect x="16" y="2" width="10" height="10" rx="2" fill="#F59E0B" opacity="0.90"/>
+        <rect x="2" y="16" width="10" height="10" rx="2" fill="#10B981" opacity="0.90"/>
+        <rect x="16" y="16" width="10" height="10" rx="2" fill="#8B5CF6" opacity="0.90"/>
+      </svg>
+    </span>
     <div id="exam-logo">MOTION</div>
     <div id="exam-name">Motion Challenge</div>
   </div>
   <div id="exam-meta">
     <div class="meta-pill"><strong>Assessment</strong>: Spatial Reasoning</div>
-    <div class="meta-pill"><strong>Duration</strong>: 10 min/level</div>
+    <div class="meta-pill"><strong>Duration</strong>: 10 min / level</div>
   </div>
 </div>
 
-<!-- ── Start Screen Overlay ── -->
+
+<!-- ══════════════════════════════════════════
+     START SCREEN OVERLAY
+══════════════════════════════════════════ -->
 <div id="start-overlay">
   <div id="start-box">
 
     <div id="start-header">
+      <!-- Logo mark -->
+      <span style="display:flex;align-items:center;margin-right:2px;">
+        <svg width="20" height="20" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="10" height="10" rx="2" fill="#fff" opacity="0.9"/>
+          <rect x="16" y="2" width="10" height="10" rx="2" fill="#F59E0B" opacity="0.85"/>
+          <rect x="2" y="16" width="10" height="10" rx="2" fill="#10B981" opacity="0.85"/>
+          <rect x="16" y="16" width="10" height="10" rx="2" fill="#8B5CF6" opacity="0.85"/>
+        </svg>
+      </span>
       <div id="start-logo-badge">MOTION</div>
       <div id="start-title">Motion Challenge</div>
       <button id="start-theme-toggle" onclick="toggleTheme()" title="Toggle dark / light mode">☀️</button>
@@ -126,14 +72,16 @@
       Spatial Reasoning Assessment &mdash; Read the rules carefully before you begin.
     </div>
 
-    <!-- ── Developer credit inside the start card ── -->
+    <!-- Developer credit -->
     <div id="start-creator">
-      <span>👨‍💻</span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.6;flex-shrink:0;">
+        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+      </svg>
       <span>Created by <span class="creator-name">Vanampally Om Prakash Reddy</span></span>
     </div>
 
     <div id="start-rules">
-      <div id="start-rules-label">Rules</div>
+      <div id="start-rules-label">Rules &amp; Instructions</div>
 
       <div class="start-rule-row">
         <div class="rule-num">1</div>
@@ -141,7 +89,7 @@
       </div>
       <div class="start-rule-row">
         <div class="rule-num">2</div>
-        <div class="rule-text">Click coloured blocks to select them, then use arrow keys to move them into empty spaces.</div>
+        <div class="rule-text">Click coloured blocks to select them, then use arrow keys to slide them into empty spaces.</div>
       </div>
       <div class="start-rule-row">
         <div class="rule-num">3</div>
@@ -149,38 +97,46 @@
       </div>
       <div class="start-rule-row">
         <div class="rule-num">4</div>
-        <div class="rule-text">Each move (ball OR block) counts as <strong>1 move</strong>. You must stay within the move limit!</div>
+        <div class="rule-text">Each move (ball OR block) counts as <strong>1 move</strong>. Stay within the move limit!</div>
       </div>
       <div class="start-rule-row">
         <div class="rule-num">5</div>
-        <div class="rule-text">Complete a level: <strong>+4 points</strong> | Fail: <strong>−1 point</strong></div>
+        <div class="rule-text">Complete a level: <strong>+4 points</strong> &nbsp;|&nbsp; Fail: <strong>−1 point</strong></div>
       </div>
     </div>
 
     <div id="start-hint">
-      <span>💡</span>
+      <span style="flex-shrink:0;">💡</span>
       <span>Plan your moves carefully! Move blocks strategically to create a clear path for the ball to reach the hole.</span>
     </div>
 
-    <button id="start-btn" onclick="startGame()">▶ Start Assessment</button>
+    <button id="start-btn" onclick="startGame()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0;">
+        <polygon points="5 3 19 12 5 21 5 3"/>
+      </svg>
+      Start Assessment
+    </button>
 
   </div>
 </div>
 
-<!-- Main Content -->
+
+<!-- ══════════════════════════════════════════
+     MAIN CONTENT — question + side panel
+══════════════════════════════════════════ -->
 <div id="wrapper">
 
-  <!-- Left Panel: Question Area -->
+  <!-- ── Question / Game Panel ── -->
   <div id="question-panel">
 
     <div id="question-header">
-      <div id="qnum-badge">Q <span id="level">1</span> </div>
+      <div id="qnum-badge">Q <span id="level">1</span></div>
       <div id="question-title">Guide the Ball to the Hole</div>
     </div>
 
     <div id="question-text">
       Move the <span class="hl">red ball</span> into the <span class="hl">black hole</span> within the move limit.
-      Click a block or the ball to select it, then use the arrow controls below the grid.
+      Click a block or the ball to select it, then use the arrow controls around the grid.
     </div>
 
     <!-- Status strip -->
@@ -206,30 +162,41 @@
       </div>
     </div>
 
-    <!-- The Board -->
+    <!-- Game Board -->
     <div id="board-area">
       <div id="gameBoard"></div>
     </div>
 
     <!-- Controls -->
     <div id="controls-area">
-      <button class="control-btn" id="resetBtn" title="Reset this level">↺ Reset</button>
-      <button class="control-btn" id="nextBtn" title="Skip to next level">⟳ Skip</button>
+      <button class="control-btn" id="resetBtn" title="Reset this level">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/>
+        </svg>
+        Reset Level
+      </button>
+      <button class="control-btn" id="nextBtn" title="Skip to next level">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="5 1 12 8 5 15"/><line x1="19" y1="1" x2="19" y2="15"/>
+        </svg>
+        Skip Level
+      </button>
     </div>
 
-    <!-- Instruction footer -->
+    <!-- Hint bar -->
     <div id="hint-bar">
-      <span>💡</span>
-      <span id="hint-text">Select a <strong>block</strong> or the <strong>ball</strong>, then press arrow buttons to slide them. Complete the puzzle within the move limit.</span>
+      <span style="flex-shrink:0;">💡</span>
+      <span id="hint-text">Select a <strong>block</strong> or the <strong>ball</strong>, then press the arrow buttons to slide them. Complete the puzzle within the move limit.</span>
     </div>
 
-  </div>
+  </div><!-- /#question-panel -->
 
-  <!-- Right Panel: Timer + Progress -->
+  <!-- ── Side Panel ── -->
   <div id="side-panel">
 
+    <!-- Timer -->
     <div id="timer-card">
-      <div id="timer-label">TIME REMAINING</div>
+      <div id="timer-label">Time Remaining</div>
       <div id="timer-display">
         <span id="timer-min">10</span><span id="timer-colon">:</span><span id="timer-sec">00</span>
       </div>
@@ -238,39 +205,46 @@
       </div>
     </div>
 
+    <!-- Progress -->
     <div id="progress-card">
-      <div class="side-card-title">PROGRESS</div>
+      <div class="side-card-title">Progress</div>
       <div id="progress-bar-bg">
         <div id="progress-bar-fill"></div>
       </div>
       <div id="progress-label">Level <span id="level-progress">1</span></div>
     </div>
 
+    <!-- Move Limit -->
     <div id="level-card">
-      <div class="side-card-title">MOVE LIMIT</div>
+      <div class="side-card-title">Move Limit</div>
       <div id="level-display"><span id="level2">—</span></div>
       <div id="level-bar-bg"><div id="level-bar-fill"></div></div>
     </div>
 
+    <!-- Instructions -->
     <div id="instructions-card">
-      <div class="side-card-title">HOW TO SOLVE</div>
+      <div class="side-card-title">How to Solve</div>
       <ol id="how-to">
-        <li>Click the ball or a block to select it.</li>
-        <li>Press arrow keys to slide pieces across the grid.</li>
-        <li>Pieces slide until they hit a wall or obstacle.</li>
-        <li>Get the ball into the black hole.</li>
+        <li>Click the ball or a coloured block to select it.</li>
+        <li>Press arrow keys or the on-screen arrows to slide.</li>
+        <li>Pieces slide until they hit a wall or another piece.</li>
+        <li>Guide the ball into the black hole.</li>
         <li>Stay within the move limit to succeed!</li>
       </ol>
     </div>
 
-  </div>
+  </div><!-- /#side-panel -->
 
-</div>
+</div><!-- /#wrapper -->
 
-<!-- End Screen Modal -->
+
+<!-- ══════════════════════════════════════════
+     END SCREEN MODAL
+══════════════════════════════════════════ -->
 <div id="modal-overlay" class="hidden">
   <div id="modal-box">
     <div id="modal-header">
+      <div id="modal-logo">MOTION</div>
       <div id="modal-title">Assessment Complete</div>
     </div>
     <div id="modal-divider"></div>
@@ -298,17 +272,43 @@
     </div>
     <div id="modal-divider2"></div>
     <div id="accuracy-wrap">
-      <div id="acc-label-row"><span>Success Rate</span><span id="acc-pct">0%</span></div>
+      <div id="acc-label-row">
+        <span>Success Rate</span>
+        <span id="acc-pct">0%</span>
+      </div>
       <div id="acc-bar-bg"><div id="acc-bar-fill"></div></div>
     </div>
-    <button id="restart-btn" onclick="restartGame()">&#8634; Restart Assessment</button>
+    <button id="restart-btn" onclick="restartGame()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+        <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/>
+      </svg>
+      Restart Assessment
+    </button>
   </div>
 </div>
 
-<!-- Floating theme toggle -->
+
+<!-- ── Floating Theme Toggle ── -->
 <button id="theme-toggle" onclick="toggleTheme()" title="Toggle dark / light mode">☀️</button>
 
-<!-- Scripts — ORDER IS CRITICAL -->
+
+<!-- ══════════════════════════════════════════
+     PAGE FOOTER
+══════════════════════════════════════════ -->
+<footer id="page-footer">
+  <div class="footer-dev-label">Developed by</div>
+  <div class="footer-dev-name">Vanampally Om Prakash Reddy</div>
+  <div class="footer-dev-email">
+    <a href="mailto:vanampallyomprakashreddy@gmail.com">vanampallyomprakashreddy@gmail.com</a>
+  </div>
+  <div><span class="footer-divider"></span></div>
+  <div class="footer-product">Motion Challenge &mdash; Spatial Reasoning &nbsp;·&nbsp; AptitudePlay</div>
+</footer>
+
+
+<!-- ══════════════════════════════════════════
+     SCRIPTS — ORDER IS CRITICAL
+══════════════════════════════════════════ -->
 <script src="js/utils/constants.js"   defer></script>
 <script src="js/utils/gridHelpers.js" defer></script>
 <script src="js/utils/timer.js"       defer></script>
@@ -328,14 +328,14 @@
 <script src="js/main.js" defer></script>
 
 <script>
-  // ── Theme ────────────────────────────────────────────────────────────────
+  /* ── Theme ── */
   function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     const icon = theme === 'dark' ? '🌙' : '☀️';
-    const t1 = document.getElementById('start-theme-toggle');
-    const t2 = document.getElementById('theme-toggle');
-    if (t1) t1.innerText = icon;
-    if (t2) t2.innerText = icon;
+    ['start-theme-toggle', 'theme-toggle'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = icon;
+    });
     localStorage.setItem('theme', theme);
   }
 
@@ -345,12 +345,12 @@
     );
   }
 
-  // Apply saved theme immediately — before any paint
+  /* Apply saved theme before first paint */
   applyTheme(localStorage.getItem('theme') || 'light');
 
-  // ── Start-game race-condition fix ────────────────────────────────────────
-  var _scriptsReady = false;
-  var _startPending = false;
+  /* ── Start-game race-condition fix ── */
+  var _scriptsReady  = false;
+  var _startPending  = false;
 
   window.addEventListener('load', function () {
     _scriptsReady = true;
@@ -371,22 +371,9 @@
 
   function _doStartGame() {
     window._gameStarted = true;
-    if (typeof initGame === 'function') {
-      initGame();
-    }
+    if (typeof initGame === 'function') initGame();
   }
 </script>
-
-<!-- ── Page Footer ── -->
-<footer id="page-footer">
-  <div class="footer-dev-label">Developed by</div>
-  <div class="footer-dev-name">Vanampally Om Prakash Reddy</div>
-  <div class="footer-dev-email">
-    <a href="mailto:vanampallyomprakashreddy@gmail.com">vanampallyomprakashreddy@gmail.com</a>
-  </div>
-  <div><span class="footer-divider"></span></div>
-  <div class="footer-product">Motion Challenge &mdash; Spatial Reasoning Assessment</div>
-</footer>
 
 </body>
 </html>

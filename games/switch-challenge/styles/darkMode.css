@@ -1,128 +1,231 @@
-/* ── Dark Mode — Switch Challenge ── */
+/* ══════════════════════════════════════════════════════
+   SWITCH CHALLENGE — Dark Mode
+   Mirrors AptitudePlay landing page dark theme exactly:
+   bg #0B1120 · cards #1F2937 · borders #1F2937
+   Blue #1E90FF · Amber #F59E0B · Purple #8B5CF6 · Teal #10B981
+   ══════════════════════════════════════════════════════ */
+
 [data-theme="dark"] {
-  --bg:         #0b1220;
-  --white:      #111827;
-  --text:       #e5e7eb;
-  --muted:      #9ca3af;
-  --border:     #1f2937;
-  --blue:       #3b82f6;
-  --blue-dark:  #1e40af;
-  --blue-light: #0f172a;
-  --blue-mid:   #1f2a44;
-  --green:      #22c55e;
-  --green-bg:   #052e1a;
-  --red:        #ef4444;
-  --red-bg:     #3b0a0a;
-  --orange:     #f97316;
-  --orange-bg:  #3a1a05;
+  --bg:          #0B1120;
+  --bg-section:  #111827;
+  --border:      #1F2937;
+  --card-bg:     #1F2937;
+  --card-border: #374151;
+
+  --text:        #F3F4F6;
+  --text-mega:   #F9FAFB;
+  --text-body:   #D1D5DB;
+  --text-sub:    #6B7280;
+  --muted:       #6B7280;
+
+  --blue-light:  rgba(30, 144, 255, 0.12);
+  --blue-mid:    rgba(30, 144, 255, 0.22);
+  --green-bg:    rgba(16, 185, 129, 0.11);
+  --red-bg:      rgba(239, 68, 68, 0.10);
+  --orange-bg:   rgba(245, 158, 11, 0.10);
+
+  --shadow-card: 0 4px 16px rgba(0,0,0,0.25);
+  --shadow-hover:0 20px 50px rgba(0,0,0,0.5);
 }
 
 [data-theme="dark"] body {
   background: var(--bg);
-  color: var(--text);
-}
-
-/* ── Panels & Cards ── */
-[data-theme="dark"] #question-panel,
-[data-theme="dark"] #timer-card,
-[data-theme="dark"] #progress-card,
-[data-theme="dark"] #level-card,
-[data-theme="dark"] #instructions-card,
-[data-theme="dark"] #modal-box,
-[data-theme="dark"] #start-box {
-  background: var(--white);
-  border-color: var(--border);
+  color: var(--text-body);
 }
 
 /* ── Exam Header ── */
 [data-theme="dark"] #exam-header {
-  background: #020617;
-  border-bottom-color: var(--blue);
+  background: #060D1A;
+  border-bottom-color: rgba(255,255,255,0.06);
 }
 
-/* ── Question Text strip ── */
+/* ── Question Panel ── */
+[data-theme="dark"] #question-panel {
+  background: var(--card-bg);
+  border-color: var(--card-border);
+}
+
 [data-theme="dark"] #question-text {
-  background: #020617;
-  color: #cbd5f5;
-  border-bottom-color: var(--border);
+  background: var(--blue-light);
+  border-bottom-color: var(--blue-mid);
+  color: var(--text-body);
 }
 
 /* ── Status strip ── */
 [data-theme="dark"] #status-strip {
-  background: #020617;
+  background: var(--bg);
   border-bottom-color: var(--border);
 }
+
+[data-theme="dark"] .status-val { color: var(--text); }
 
 /* ── Puzzle area ── */
 [data-theme="dark"] #puzzle-area,
 [data-theme="dark"] #transform-area {
-  background: var(--white);
+  background: var(--card-bg);
 }
 
 /* ── Source symbols ── */
 [data-theme="dark"] .symbol {
-  background: #1f2937;
+  background: #111827;
   border-color: #374151;
-  color: #93c5fd;
+  color: #60AAFF;
 }
 
 /* ── Target symbols ── */
 [data-theme="dark"] .symbol.target {
-  background: var(--orange-bg);
-  border-color: #7a4510;
-  color: var(--orange);
+  background: rgba(245, 158, 11, 0.10);
+  border-color: rgba(245, 158, 11, 0.28);
+  color: #FBBF24;
 }
 
 /* ── Operators ── */
 [data-theme="dark"] .operator {
   background: #111827;
   border-color: #374151;
-  color: var(--text);
+  color: var(--text-body);
 }
 
 [data-theme="dark"] .operator:hover {
-  background: #1e293b;
+  background: rgba(30, 144, 255, 0.12);
   border-color: var(--blue);
+  box-shadow: 0 4px 16px rgba(30, 144, 255, 0.2);
 }
 
 [data-theme="dark"] .operator.selected {
-  background: #0f172a;
+  background: rgba(30, 144, 255, 0.12);
   border-color: var(--blue);
-  color: #93c5fd;
-  box-shadow: inset 0 0 0 1px var(--blue);
+  color: #60AAFF;
+  box-shadow: 0 0 0 3px rgba(30, 144, 255, 0.18);
 }
 
 /* ── Hint / Feedback Bar ── */
 [data-theme="dark"] #hint-bar {
-  background: #1a1205;
-  border-top-color: #3a2a05;
-  color: #facc15;
+  background: rgba(245, 158, 11, 0.08);
+  border-top-color: rgba(245, 158, 11, 0.18);
+  color: #FBBF24;
 }
 
 [data-theme="dark"] #hint-bar.correct {
-  background: var(--green-bg);
-  border-top-color: #14532d;
-  color: var(--green);
+  background: rgba(16, 185, 129, 0.11);
+  border-top-color: rgba(16, 185, 129, 0.22);
+  color: #34D399;
 }
 
 [data-theme="dark"] #hint-bar.wrong {
-  background: var(--red-bg);
-  border-top-color: #7f1d1d;
-  color: var(--red);
+  background: rgba(239, 68, 68, 0.10);
+  border-top-color: rgba(239, 68, 68, 0.18);
+  color: #FCA5A5;
 }
 
-/* ── Timer & Progress bars ── */
+/* ── Side panel cards ── */
+[data-theme="dark"] #timer-card,
+[data-theme="dark"] #progress-card,
+[data-theme="dark"] #level-card,
+[data-theme="dark"] #instructions-card {
+  background: var(--card-bg);
+  border-color: var(--card-border);
+}
+
+/* ── Timer ── */
+[data-theme="dark"] #timer-display {
+  color: var(--text);
+}
+
 [data-theme="dark"] #timer-bar-bg,
 [data-theme="dark"] #progress-bar-bg,
 [data-theme="dark"] #level-bar-bg,
 [data-theme="dark"] #acc-bar-bg {
-  background: #020617;
+  background: var(--bg);
   border-color: var(--border);
 }
 
+/* ── Instructions list ── */
+[data-theme="dark"] #how-to {
+  color: var(--text-body);
+}
+
+[data-theme="dark"] #how-to strong {
+  color: var(--text);
+}
+
+/* ── Level display ── */
+[data-theme="dark"] #level-display {
+  color: var(--text);
+}
+
+/* ── Progress label ── */
+[data-theme="dark"] #progress-label {
+  color: var(--muted);
+}
+
+/* ── Start Screen ── */
+[data-theme="dark"] #start-overlay {
+  background: rgba(0, 0, 0, 0.75);
+}
+
+[data-theme="dark"] #start-box {
+  background: var(--card-bg);
+  border-color: var(--card-border);
+  box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+}
+
+[data-theme="dark"] #start-header {
+  background: #060D1A;
+}
+
+[data-theme="dark"] #start-divider {
+  background: var(--border);
+}
+
+[data-theme="dark"] #start-subtitle {
+  background: var(--blue-light);
+  border-color: var(--blue-mid);
+  color: var(--text-body);
+}
+
+[data-theme="dark"] #start-rules-label {
+  color: var(--muted);
+}
+
+[data-theme="dark"] .start-rule-row {
+  border-color: var(--border);
+  color: var(--text-body);
+}
+
+[data-theme="dark"] .rule-text strong {
+  color: #60AAFF;
+}
+
+[data-theme="dark"] #start-hint {
+  background: rgba(245, 158, 11, 0.08);
+  border-top-color: rgba(245, 158, 11, 0.18);
+  color: #FBBF24;
+}
+
+[data-theme="dark"] #start-creator {
+  background: var(--bg);
+  border-color: var(--border);
+  color: var(--muted);
+}
+
+[data-theme="dark"] #start-creator .creator-name {
+  color: #60AAFF;
+}
+
 /* ── Modal ── */
+[data-theme="dark"] #modal-overlay {
+  background: rgba(0, 0, 0, 0.75);
+}
+
+[data-theme="dark"] #modal-box {
+  background: var(--card-bg);
+  border-color: var(--card-border);
+  box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+}
+
 [data-theme="dark"] #modal-header {
-  background: #020617;
+  background: #060D1A;
 }
 
 [data-theme="dark"] #modal-divider,
@@ -131,79 +234,47 @@
 }
 
 [data-theme="dark"] .result-row {
-  border-bottom-color: #1f2937;
+  border-bottom-color: var(--border);
 }
 
-/* ── Start Screen ── */
-[data-theme="dark"] #start-box {
-  background: #1e2a40;
+[data-theme="dark"] .result-label {
+  color: var(--muted);
 }
 
-[data-theme="dark"] #start-divider {
-  background: #2e3f5c;
+[data-theme="dark"] .result-val {
+  color: var(--text);
 }
 
-[data-theme="dark"] #start-subtitle {
-  background: #162236;
-  border-color: #2a3f60;
-  color: #a8c0e0;
+[data-theme="dark"] .result-val.green { color: #34D399; }
+[data-theme="dark"] .result-val.red   { color: #FCA5A5; }
+[data-theme="dark"] .result-val.accent { color: #60AAFF; }
+
+[data-theme="dark"] #acc-label-row {
+  color: var(--muted);
 }
 
-[data-theme="dark"] #start-rules-label {
-  color: #8a9ab8;
+[data-theme="dark"] #acc-pct {
+  color: var(--text);
 }
 
-[data-theme="dark"] .start-rule-row {
-  border-color: #2a3a55;
-  color: #d0dff5;
+/* ── Footer ── */
+[data-theme="dark"] #page-footer {
+  background: #060D1A;
+  border-top-color: rgba(255,255,255,0.04);
 }
 
-[data-theme="dark"] .rule-text strong {
-  color: #5fa0e8;
-}
-
-[data-theme="dark"] #start-hint {
-  background: #2a2010;
-  border-color: #5a4010;
-  color: #c8a84a;
-}
-
-/* ── How-to list ── */
-[data-theme="dark"] #how-to {
-  color: #9ca3af;
+/* ── Floating theme toggle ── */
+[data-theme="dark"] #theme-toggle {
+  background: var(--card-bg);
+  border-color: var(--card-border);
+  color: #FBBF24;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
 }
 
 /* ── Scrollbar ── */
 [data-theme="dark"] * {
-  scrollbar-color: #334155 #020617;
+  scrollbar-color: #374151 #0B1120;
 }
 
-/* ── Floating theme toggle button ── */
-#theme-toggle {
-  position: fixed;
-  bottom: 18px;
-  right: 18px;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: none;
-  background: #1e293b;
-  color: #facc15;
-  font-size: 20px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.3);
-  transition: transform 0.15s ease, background 0.2s;
-}
-
-#theme-toggle:hover {
-  transform: scale(1.1);
-}
-
-[data-theme="dark"] #theme-toggle {
-  background: #facc15;
-  color: #020617;
-}
+[data-theme="dark"] *::-webkit-scrollbar-track { background: #0B1120; }
+[data-theme="dark"] *::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }

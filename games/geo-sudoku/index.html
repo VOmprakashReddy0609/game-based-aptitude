@@ -1,338 +1,404 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Geo Sudoku Trainer — Symbol Reasoning</title>
+<title>Geo Sudoku Trainer — AptitudePlay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles/style.css">
 <link rel="stylesheet" href="styles/darkMode.css">
 <style>
-  /* ── Start Screen Overlay ── */
-  #start-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(10, 20, 50, 0.65);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-  }
-  #start-overlay.hidden {
-    display: none;
-  }
+/* ═══════════════════════════════════════════════════
+   START / RULES OVERLAY — landing-page aesthetic
+═══════════════════════════════════════════════════ */
 
-  #start-box {
-    background: #ffffff;
-    border-radius: 6px;
-    width: 420px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    overflow: hidden;
-    animation: modal-in 0.25s ease;
-    font-family: Arial, Helvetica, sans-serif;
-  }
+#start-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(11,17,32,0.68);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 16px;
+}
 
-  @keyframes modal-in {
-    from { transform: translateY(30px) scale(0.97); opacity: 0; }
-    to   { transform: translateY(0) scale(1);       opacity: 1; }
-  }
+#start-overlay.hidden { display: none; }
 
-  /* Header — mirrors #modal-header */
-  #start-header {
-    background: #123d7a;
-    color: white;
-    padding: 18px 24px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
+#start-box {
+  background: var(--card-bg, #fff);
+  border: 1px solid var(--card-border, #E5E7EB);
+  border-radius: 20px;
+  width: 460px;
+  max-width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.18);
+  animation: modal-in 0.30s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
 
-  #start-logo-badge {
-    background: white;
-    color: #123d7a;
-    font-size: 12px;
-    font-weight: 700;
-    padding: 3px 8px;
-    border-radius: 3px;
-    letter-spacing: 2px;
-  }
+/* Coloured top accent bar */
+#start-box::before {
+  content: '';
+  display: block;
+  height: 3px;
+  background: linear-gradient(90deg, #10B981 0%, #1E90FF 50%, #8B5CF6 100%);
+  border-radius: 20px 20px 0 0;
+}
 
-  #start-title {
-    font-size: 17px;
-    font-weight: 700;
-    color: white;
-    letter-spacing: 0.3px;
-  }
+@keyframes modal-in {
+  from { transform: translateY(36px) scale(0.95); opacity: 0; }
+  to   { transform: translateY(0) scale(1);       opacity: 1; }
+}
 
-  /* Theme toggle inside the header */
-  #start-theme-toggle {
-    margin-left: auto;
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    border-radius: 4px;
-    padding: 4px 9px;
-    font-size: 16px;
-    cursor: pointer;
-    line-height: 1;
-    transition: background 0.15s;
-    flex-shrink: 0;
-  }
-  #start-theme-toggle:hover {
-    background: rgba(255, 255, 255, 0.28);
-  }
+/* ── Start box header ── */
+#start-header {
+  padding: 20px 24px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--card-border, #E5E7EB);
+}
 
-  #start-divider {
-    height: 1px;
-    background: #c5cfe0;
-  }
+/* 4-square logo icon (inline SVG) */
+#start-logo-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
 
-  /* Subtitle strip — mirrors #question-text */
-  #start-subtitle {
-    background: #e8f0fb;
-    border-bottom: 1px solid #c6d8f5;
-    padding: 12px 24px;
-    font-size: 13px;
-    color: #2a3a5c;
-    line-height: 1.6;
-  }
+#start-wordmark {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-h, #1F2937);
+  letter-spacing: -0.3px;
+}
 
-  /* ── "Created by" strip inside the start card ── */
-  #start-creator {
-    background: #f4f7fd;
-    border-bottom: 1px solid #dde6f5;
-    padding: 8px 24px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 11.5px;
-    color: #4a5c7a;
-    font-family: Arial, Helvetica, sans-serif;
-  }
+#start-game-badge {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(16,185,129,0.10);
+  border: 1px solid rgba(16,185,129,0.25);
+  color: #059669;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 100px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
 
-  #start-creator .creator-icon {
-    font-size: 14px;
-    flex-shrink: 0;
-  }
+/* Theme toggle in start box header */
+#start-theme-toggle {
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--card-border, #E5E7EB);
+  background: var(--bg, #F9FAFB);
+  color: var(--text-body, #4B5563);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+  transition: border-color 0.2s, background 0.2s;
+  line-height: 1;
+  padding: 0;
+}
+#start-theme-toggle:hover {
+  border-color: var(--text-sub, #9CA3AF);
+}
 
-  #start-creator .creator-name {
-    font-weight: 700;
-    color: #1a56a0;
-    letter-spacing: 0.2px;
-  }
+/* ── Description band ── */
+#start-subtitle {
+  background: rgba(30,144,255,0.06);
+  border-bottom: 1px solid rgba(30,144,255,0.14);
+  padding: 12px 24px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: var(--text-body, #4B5563);
+  line-height: 1.6;
+}
 
-  /* Rules block */
-  #start-rules {
-    padding: 20px 24px 8px;
-  }
+/* ── Creator strip ── */
+#start-creator {
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12.5px;
+  color: var(--text-sub, #9CA3AF);
+  border-bottom: 1px solid var(--card-border, #E5E7EB);
+  background: var(--bg, #F9FAFB);
+}
 
-  #start-rules-label {
-    font-size: 10px;
-    letter-spacing: 2px;
-    color: #555;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
+.creator-icon { font-size: 15px; flex-shrink: 0; }
 
-  /* Mirrors .result-row pattern */
-  .start-rule-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 9px 0;
-    border-bottom: 1px solid #f0f3f8;
-    font-size: 13px;
-    color: #1a1a2e;
-    line-height: 1.5;
-  }
+.creator-name {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  color: var(--blue, #1E90FF);
+  font-size: 13px;
+}
 
-  .start-rule-row:last-child {
-    border-bottom: none;
-  }
+/* ── Rules block ── */
+#start-rules {
+  padding: 20px 24px 8px;
+}
 
-  .rule-num {
-    background: #1a56a0;
-    color: white;
-    font-size: 11px;
-    font-weight: 700;
-    min-width: 22px;
-    height: 22px;
-    border-radius: 3px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
+#start-rules-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-sub, #9CA3AF);
+  margin-bottom: 12px;
+}
 
-  .rule-text strong {
-    color: #1a56a0;
-  }
+.start-rule-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--card-border, #E5E7EB);
+  font-family: 'Inter', sans-serif;
+  font-size: 13.5px;
+  color: var(--text-body, #4B5563);
+  line-height: 1.55;
+}
 
-  /* Warning strip — mirrors #hint-bar */
-  #start-hint {
-    background: #fffbf0;
-    border-top: 1px solid #f0e0b8;
-    padding: 10px 24px;
-    font-size: 12px;
-    color: #7a5800;
-    display: flex;
-    gap: 8px;
-    align-items: flex-start;
-  }
+.start-rule-row:last-child { border-bottom: none; }
 
-  /* Start button — mirrors #restart-btn */
-  #start-btn {
-    display: block;
-    width: calc(100% - 48px);
-    margin: 18px 24px 24px;
-    padding: 12px;
-    background: #1a56a0;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 14px;
-    font-weight: 700;
-    font-family: Arial, Helvetica, sans-serif;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    transition: background 0.15s;
-  }
+.rule-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px; height: 24px;
+  border-radius: 6px;
+  background: var(--blue, #1E90FF);
+  color: #fff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
 
-  #start-btn:hover {
-    background: #123d7a;
-  }
+.rule-text strong {
+  color: var(--text-h, #1F2937);
+  font-weight: 600;
+}
 
-  /* ── Dark-mode overrides for the start box ── */
-  [data-theme="dark"] #start-box {
-    background: #1e2a40;
-  }
-  [data-theme="dark"] #start-divider {
-    background: #2e3f5c;
-  }
-  [data-theme="dark"] #start-subtitle {
-    background: #162236;
-    border-color: #2a3f60;
-    color: #a8c0e0;
-  }
-  [data-theme="dark"] #start-creator {
-    background: #182535;
-    border-color: #253a56;
-    color: #7a9ac0;
-  }
-  [data-theme="dark"] #start-creator .creator-name {
-    color: #5fa0e8;
-  }
-  [data-theme="dark"] #start-rules-label {
-    color: #8a9ab8;
-  }
-  [data-theme="dark"] .start-rule-row {
-    border-color: #2a3a55;
-    color: #d0dff5;
-  }
-  [data-theme="dark"] .rule-text strong {
-    color: #5fa0e8;
-  }
-  [data-theme="dark"] #start-hint {
-    background: #2a2010;
-    border-color: #5a4010;
-    color: #c8a84a;
-  }
-  [data-theme="dark"] #start-btn {
-    background: #1a56a0;
-  }
-  [data-theme="dark"] #start-btn:hover {
-    background: #123d7a;
-  }
+/* ── Tip strip ── */
+#start-hint {
+  margin: 12px 24px;
+  padding: 11px 14px;
+  background: rgba(245,158,11,0.07);
+  border: 1px solid rgba(245,158,11,0.22);
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12.5px;
+  color: #92400E;
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  line-height: 1.55;
+}
 
-  /* ── Page Footer ── */
-  #page-footer {
-    width: 100%;
-    background: #0d2a52;
-    color: #a0b8d8;
-    text-align: center;
-    padding: 18px 24px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 12.5px;
-    line-height: 1.8;
-    letter-spacing: 0.2px;
-    border-top: 3px solid #1a56a0;
-    box-sizing: border-box;
-  }
+/* ── CTA Buttons ── */
+.start-btn-group {
+  padding: 4px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
-  #page-footer .footer-dev-label {
-    font-size: 10px;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: #5a85b8;
-    margin-bottom: 4px;
-  }
+#start-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 13px 24px;
+  background: var(--blue, #1E90FF);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.22s, transform 0.22s, box-shadow 0.22s;
+  box-shadow: 0 2px 8px rgba(30,144,255,0.28);
+}
 
-  #page-footer .footer-dev-name {
-    font-size: 14px;
-    font-weight: 700;
-    color: #e0ecff;
-    letter-spacing: 0.4px;
-  }
+#start-btn:hover {
+  background: #1570D0;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(30,144,255,0.38);
+}
 
-  #page-footer .footer-dev-email a {
-    color: #5fa8e8;
-    text-decoration: none;
-    font-size: 12.5px;
-    transition: color 0.15s;
-  }
+#start-btn:active { transform: translateY(0); }
 
-  #page-footer .footer-dev-email a:hover {
-    color: #90c8ff;
-    text-decoration: underline;
-  }
+#resume-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 13px 24px;
+  background: transparent;
+  color: var(--text-h, #1F2937);
+  border: 1.5px solid var(--card-border, #E5E7EB);
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.22s, background 0.22s, transform 0.22s;
+}
 
-  #page-footer .footer-divider {
-    display: inline-block;
-    width: 40px;
-    height: 1px;
-    background: #2a4a78;
-    margin: 8px auto;
-    vertical-align: middle;
-  }
+#resume-btn.visible { display: flex; }
 
-  #page-footer .footer-product {
-    font-size: 11.5px;
-    color: #6080a8;
-  }
+#resume-btn:hover {
+  border-color: var(--text-sub, #9CA3AF);
+  background: var(--bg, #F9FAFB);
+  transform: translateY(-1px);
+}
 
-  [data-theme="dark"] #page-footer {
-    background: #0a1a30;
-    border-color: #1a3a6a;
-  }
+/* ─────────────────────────────────────
+   DARK MODE — start overlay overrides
+───────────────────────────────────── */
+[data-theme="dark"] #start-box {
+  background: #1F2937;
+  border-color: #374151;
+}
+
+[data-theme="dark"] #start-header {
+  border-bottom-color: #374151;
+}
+
+[data-theme="dark"] #start-wordmark {
+  color: #F3F4F6;
+}
+
+[data-theme="dark"] #start-game-badge {
+  background: rgba(52,211,153,0.12);
+  border-color: rgba(52,211,153,0.28);
+  color: #34D399;
+}
+
+[data-theme="dark"] #start-theme-toggle {
+  background: #111827;
+  border-color: #374151;
+  color: #D1D5DB;
+}
+
+[data-theme="dark"] #start-subtitle {
+  background: rgba(30,144,255,0.07);
+  border-bottom-color: rgba(30,144,255,0.15);
+  color: #CBD5E1;
+}
+
+[data-theme="dark"] #start-creator {
+  background: #111827;
+  border-bottom-color: #374151;
+  color: #6B7280;
+}
+
+[data-theme="dark"] .creator-name {
+  color: #60A5FA;
+}
+
+[data-theme="dark"] #start-rules-label { color: #6B7280; }
+
+[data-theme="dark"] .start-rule-row {
+  border-bottom-color: #374151;
+  color: #D1D5DB;
+}
+
+[data-theme="dark"] .rule-text strong { color: #F3F4F6; }
+
+[data-theme="dark"] #start-hint {
+  background: rgba(245,158,11,0.07);
+  border-color: rgba(245,158,11,0.20);
+  color: #FCD34D;
+}
+
+[data-theme="dark"] #resume-btn {
+  color: #F3F4F6;
+  border-color: #374151;
+}
+
+[data-theme="dark"] #resume-btn:hover {
+  border-color: #6B7280;
+  background: #111827;
+}
 </style>
 </head>
 
 <body>
 
-<!-- ── Start Screen ── -->
+<!-- ═══════════════════════════════════════
+     START SCREEN OVERLAY
+═══════════════════════════════════════ -->
 <div id="start-overlay">
   <div id="start-box">
 
     <div id="start-header">
-      <div id="start-logo-badge">GST</div>
-      <div id="start-title">Geo Sudoku Trainer</div>
-      <!-- Theme toggle lives here so it's always above the overlay -->
-      <button id="start-theme-toggle" onclick="toggleTheme()" title="Toggle dark / light mode">☀️</button>
-    </div>
+      <!-- 4-square brand logo (same SVG as landing page nav) -->
+      <span id="start-logo-icon">
+        <svg width="26" height="26" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="10" height="10" rx="2" fill="#1E90FF"/>
+          <rect x="16" y="2" width="10" height="10" rx="2" fill="#F59E0B" opacity="0.85"/>
+          <rect x="2" y="16" width="10" height="10" rx="2" fill="#10B981" opacity="0.85"/>
+          <rect x="16" y="16" width="10" height="10" rx="2" fill="#8B5CF6" opacity="0.85"/>
+        </svg>
+      </span>
 
-    <div id="start-divider"></div>
+      <span id="start-wordmark">AptitudePlay</span>
+
+      <span id="start-game-badge">Geo Sudoku</span>
+
+      <button id="start-theme-toggle" onclick="toggleTheme()" title="Toggle dark / light mode" aria-label="Toggle theme">
+        <svg class="sun-icon-s" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <svg class="moon-icon-s" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+    </div>
 
     <div id="start-subtitle">
-      Symbol Reasoning Assessment &mdash; Read the rules carefully before you begin.
+      Symbol Reasoning Assessment — Read the rules carefully before you begin.
     </div>
 
-    <!-- ── Developer credit inside the start card ── -->
     <div id="start-creator">
       <span class="creator-icon">👨‍💻</span>
       <span>Created by <span class="creator-name">Vanampally Om Prakash Reddy</span></span>
     </div>
 
     <div id="start-rules">
-      <div id="start-rules-label">Rules</div>
+      <div id="start-rules-label">Game Rules</div>
 
       <div class="start-rule-row">
         <div class="rule-num">1</div>
@@ -357,26 +423,69 @@
       <span>Use row and column elimination to narrow down the correct symbol for each <strong>?</strong> cell.</span>
     </div>
 
-    <button id="start-btn" onclick="startGame()">&#9654; Start Assessment</button>
-    <button id="resume-btn" onclick="resumeSavedGame()" style="display:none;
-      width: calc(100% - 48px); margin: 0 24px 12px; padding: 12px;
-      background: #1a7a3c; color: white; border: none; border-radius: 4px;
-      font-size: 14px; font-weight: 700; font-family: Arial, Helvetica, sans-serif;
-      letter-spacing: 0.5px; cursor: pointer; transition: background 0.15s;">
-      &#9654; Resume Game
+    <div class="start-btn-group">
+      <button id="start-btn" onclick="startGame()">▶ Start Assessment</button>
+      <button id="resume-btn" onclick="resumeSavedGame()">↺ Resume Game</button>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     NAV BAR (mirrors landing page)
+═══════════════════════════════════════ -->
+<div id="exam-header">
+  <div id="exam-branding">
+
+    <!-- Logo group -->
+    <div id="exam-logo-group">
+      <span id="exam-logo">
+        <svg width="26" height="26" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="10" height="10" rx="2" fill="#1E90FF"/>
+          <rect x="16" y="2" width="10" height="10" rx="2" fill="#F59E0B" opacity="0.85"/>
+          <rect x="2" y="16" width="10" height="10" rx="2" fill="#10B981" opacity="0.85"/>
+          <rect x="16" y="16" width="10" height="10" rx="2" fill="#8B5CF6" opacity="0.85"/>
+        </svg>
+      </span>
+      <span id="exam-name">AptitudePlay</span>
+    </div>
+
+    <div id="exam-divider"></div>
+    <span id="exam-subtitle">Geo Sudoku Trainer</span>
+
+    <div id="exam-meta">
+      <span class="meta-pill pill-teal">Symbol Reasoning</span>
+      <span class="meta-pill pill-blue">Beginner</span>
+    </div>
+
+    <!-- Theme toggle -->
+    <button id="theme-toggle-nav" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle dark / light mode">
+      <svg class="sun-icon-n" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+      <svg class="moon-icon-n" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
     </button>
 
   </div>
 </div>
 
-<!-- Main Content -->
+
+<!-- ═══════════════════════════════════════
+     MAIN CONTENT
+═══════════════════════════════════════ -->
 <div id="wrapper">
 
   <!-- Left Panel: Question Area -->
   <div id="question-panel">
 
     <div id="question-header">
-      <div id="qnum-badge">Q <span id="level">1</span> </div>
+      <div id="qnum-badge">Q <span id="level">1</span></div>
       <div id="question-title">Complete the Symbol Grid</div>
     </div>
 
@@ -414,7 +523,7 @@
     </div>
 
     <!-- Symbol Options -->
-    <div id="options-label">&#9660; SELECT SYMBOL</div>
+    <div id="options-label">▼ SELECT SYMBOL</div>
     <div id="options"></div>
 
     <!-- Instruction footer -->
@@ -423,13 +532,13 @@
       <span id="hint-text">Click on any <strong>?</strong> cell to select it, then pick the correct symbol from the choices above.</span>
     </div>
 
-  </div>
+  </div><!-- /#question-panel -->
 
   <!-- Right Panel: Timer + Progress -->
   <div id="side-panel">
 
     <div id="timer-card">
-      <div id="timer-label">TIME REMAINING</div>
+      <div id="timer-label">Time Remaining</div>
       <div id="timer-display">
         <span id="timer-min">04</span><span id="timer-colon">:</span><span id="timer-sec">00</span>
       </div>
@@ -439,7 +548,7 @@
     </div>
 
     <div id="progress-card">
-      <div class="side-card-title">PROGRESS</div>
+      <div class="side-card-title">Progress</div>
       <div id="progress-bar-bg">
         <div id="progress-bar-fill"></div>
       </div>
@@ -447,13 +556,13 @@
     </div>
 
     <div id="level-card">
-      <div class="side-card-title">LEVEL</div>
+      <div class="side-card-title">Level</div>
       <div id="level-display"><span id="level2">1</span></div>
       <div id="level-bar-bg"><div id="level-bar-fill"></div></div>
     </div>
 
     <div id="instructions-card">
-      <div class="side-card-title">HOW TO SOLVE</div>
+      <div class="side-card-title">How to Solve</div>
       <ol id="how-to">
         <li>Each row must have all symbols exactly once.</li>
         <li>Each column must have all symbols exactly once.</li>
@@ -463,14 +572,18 @@
       </ol>
     </div>
 
-  </div>
+  </div><!-- /#side-panel -->
 
-</div>
+</div><!-- /#wrapper -->
 
-<!-- End Screen Modal -->
+
+<!-- ═══════════════════════════════════════
+     END-GAME MODAL
+═══════════════════════════════════════ -->
 <div id="modal-overlay" class="hidden">
   <div id="modal-box">
     <div id="modal-header">
+      <div id="modal-logo">GST</div>
       <div id="modal-title">Assessment Complete</div>
     </div>
     <div id="modal-divider"></div>
@@ -502,13 +615,18 @@
     </div>
     <div id="modal-divider2"></div>
     <div id="accuracy-wrap">
-      <div id="acc-label-row"><span>Accuracy</span><span id="acc-pct">0%</span></div>
+      <div id="acc-label-row">
+        <span>Accuracy</span>
+        <span id="acc-pct">0%</span>
+      </div>
       <div id="acc-bar-bg"><div id="acc-bar-fill"></div></div>
     </div>
-    <button id="restart-btn" onclick="restartGame()">&#8634; Restart Assessment</button>
+    <button id="restart-btn" onclick="restartGame()">↺ Restart Assessment</button>
   </div>
 </div>
 
+
+<!-- Game scripts (unchanged) -->
 <script src="js/regions.js"></script>
 <script src="js/validator.js"></script>
 <script src="js/solver.js"></script>
@@ -517,70 +635,82 @@
 <script src="js/game.js"></script>
 
 <script>
-  /* ── Theme helpers ── */
-  function applyTheme(theme) {
-    document.documentElement.setAttribute('data-theme', theme);
-    const icon = theme === 'dark' ? '🌙' : '☀️';
-    // Keep both toggle buttons in sync
-    const t1 = document.getElementById('start-theme-toggle');
-    const t2 = document.getElementById('theme-toggle');
-    if (t1) t1.innerText = icon;
-    if (t2) t2.innerText = icon;
-    localStorage.setItem('theme', theme);
-  }
+/* ── Theme helpers ── */
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
 
-  function toggleTheme() {
-    const current = document.documentElement.getAttribute('data-theme');
-    applyTheme(current === 'dark' ? 'light' : 'dark');
-  }
+  const isDark = (theme === 'dark');
 
-  /* Apply saved theme immediately on load */
-  (function () {
-    const saved = localStorage.getItem('theme') || 'light';
-    applyTheme(saved);
-  })();
+  /* Toggle sun/moon icons in start overlay */
+  document.querySelectorAll('.sun-icon-s').forEach(el => el.style.display = isDark ? 'none' : '');
+  document.querySelectorAll('.moon-icon-s').forEach(el => el.style.display = isDark ? '' : 'none');
 
-  /* ── Game bootstrap ── */
-  window.addEventListener('DOMContentLoaded', () => {
-    // Check for a saved in-progress session and update the start overlay buttons
-    const saved = localStorage.getItem('geoSudoku_state');
-    if (saved) {
-      try {
-        const s = JSON.parse(saved);
-        if (s && s.gameStarted) {
-          // Offer Resume as the primary action
-          const resumeBtn = document.getElementById('resume-btn');
-          const startBtn  = document.getElementById('start-btn');
-          if (resumeBtn) resumeBtn.style.display = 'block';
-          if (startBtn)  {
-            startBtn.textContent = '↺ New Game (reset progress)';
-            startBtn.style.background = '#6b7280';
-          }
+  /* Toggle sun/moon icons in nav */
+  document.querySelectorAll('.sun-icon-n').forEach(el => el.style.display = isDark ? 'none' : '');
+  document.querySelectorAll('.moon-icon-n').forEach(el => el.style.display = isDark ? '' : 'none');
+
+  /* Floating toggle emoji */
+  const ft = document.getElementById('theme-toggle');
+  if (ft) ft.textContent = isDark ? '☀️' : '🌙';
+
+  localStorage.setItem('theme', theme);
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  applyTheme(current === 'dark' ? 'light' : 'dark');
+}
+
+/* Apply saved theme immediately */
+(function () {
+  const saved = localStorage.getItem('theme') || 'light';
+  applyTheme(saved);
+})();
+
+/* ── Navbar scroll class ── */
+const examHeader = document.getElementById('exam-header');
+window.addEventListener('scroll', () => {
+  examHeader.classList.toggle('scrolled', window.scrollY > 10);
+}, { passive: true });
+
+/* ── Game bootstrap ── */
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('geoSudoku_state');
+  if (saved) {
+    try {
+      const s = JSON.parse(saved);
+      if (s && s.gameStarted) {
+        const resumeBtn = document.getElementById('resume-btn');
+        const startBtn  = document.getElementById('start-btn');
+        if (resumeBtn) {
+          resumeBtn.classList.add('visible');
+          resumeBtn.style.display = 'flex';
         }
-      } catch (e) { /* malformed save — ignore */ }
-    }
-  });
-
-  // Resume the existing saved session (skips the start overlay logic in game.js
-  // since window.onload already handles it; we just dismiss the overlay here).
-  function resumeSavedGame() {
-    document.getElementById('start-overlay').classList.add('hidden');
-    // game.js window.onload has already restored state and started the timer
-    // when it detected gameStarted=true, so nothing more to do here.
+        if (startBtn) {
+          startBtn.textContent = '↺ New Game (reset progress)';
+        }
+      }
+    } catch (e) { /* malformed save — ignore */ }
   }
+});
 
-  function startGame() {
-    // New game — clear any existing save first
-    try { localStorage.removeItem('geoSudoku_state'); } catch(e) {}
-    document.getElementById('start-overlay').classList.add('hidden');
-    if (typeof initGame === 'function') initGame();
-  }
+function resumeSavedGame() {
+  document.getElementById('start-overlay').classList.add('hidden');
+}
+
+function startGame() {
+  try { localStorage.removeItem('geoSudoku_state'); } catch(e) {}
+  document.getElementById('start-overlay').classList.add('hidden');
+  if (typeof initGame === 'function') initGame();
+}
 </script>
 
-<!-- Floating toggle shown after the overlay closes -->
-<button id="theme-toggle" onclick="toggleTheme()" title="Toggle dark / light mode">☀️</button>
+<!-- Floating theme toggle (shown while playing) -->
+<button id="theme-toggle" onclick="toggleTheme()" title="Toggle dark / light mode" aria-label="Toggle theme">🌙</button>
 
-<!-- ── Page Footer ── -->
+<!-- ═══════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════ -->
 <footer id="page-footer">
   <div class="footer-dev-label">Developed by</div>
   <div class="footer-dev-name">Vanampally Om Prakash Reddy</div>
@@ -588,7 +718,7 @@
     <a href="mailto:vanampallyomprakashreddy@gmail.com">vanampallyomprakashreddy@gmail.com</a>
   </div>
   <div><span class="footer-divider"></span></div>
-  <div class="footer-product">Geo Sudoku Trainer &mdash; Symbol Reasoning Assessment</div>
+  <div class="footer-product">Geo Sudoku Trainer — Symbol Reasoning Assessment · AptitudePlay</div>
 </footer>
 
 </body>
